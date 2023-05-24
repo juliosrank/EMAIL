@@ -16,13 +16,14 @@
 }
 
 .form-group {
-  margin-bottom: -8px;
+  margin-bottom: -3px;
 }
 
 label {
   display: block;
   font-weight: bold;
   padding: 10px;
+  margin-bottom: -10px;
 }
 
 input[type="text"],
@@ -54,3 +55,8 @@ select {
 .button-container button:hover {
   background-color: #0056b3;
 }
+
+.align-center {
+  text-align: center;
+}
+
