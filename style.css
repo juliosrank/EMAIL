@@ -1,0 +1,56 @@
+/* Estilos CSS */
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column {
+  flex-basis: 35%;
+  padding: 20px;
+}
+
+.column-2 {
+  flex-basis: 65%;
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: -8px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  padding: 10px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top:1px; /* Ajuste o valor da margem superior conforme desejado */
+}
+
+
+.button-container {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #0056b3;
+}

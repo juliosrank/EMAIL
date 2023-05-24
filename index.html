@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Assinatura de Email - UBEC</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/handlebars/dist/handlebars.min.js"></script>  
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">        
+        <div class="form-group">
+          <label for="unidades_de_missao">Selecione sua Unidade:</label>
+          <select class="form-control" id="unidades_de_missao">
+            <option value="" disabled selected>Unidade de Missão</option>
+            <option value="cecb">Colégio Católica de Brasília</option>
+            <option value="cecc">Colégio Católica de Curitiba</option>
+            <option value="cecma">Colégio Católica Machado de Assis</option>
+            <option value="padre">Colégio Católica Padre de Man</option>
+            <option value="timoteo">Colégio Católica de Timóteo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="nome">Nome:</label>
+          <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite seu nome">
+        </div>
+        <div class="form-group">
+          <label for="cargo">Cargo:</label>
+          <input type="text" class="form-control" id="cargo" name="cargo" placeholder="Digite seu cargo">
+        </div>
+        <div class="form-group">
+          <label for="setor">Setor:</label>
+          <input type="text" class="form-control" id="setor" name="setor" placeholder="Digite seu setor">
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu email">
+        </div>
+        <div class="form-group">
+          <label for="telefone">Telefone:</label>
+          <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="Digite seu telefone">
+        </div>
+        <div class="form-group">
+          <label for="celular">Celular:</label>
+          <input type="tel" class="form-control" id="celular" name="celular" placeholder="Digite seu celular">
+        </div>
+        <div class="button-container">
+            <button id="submit-button">Gerar Assinatura</button>
+          </div>
+      </div>
+      <div class="col-md-8">        
+        <div id="column-2"></div>
+        <button id="select-button">Selecionar Assinatura</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assinatura.js"></script>
+</body>
+</html>
