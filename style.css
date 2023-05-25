@@ -17,6 +17,12 @@
   align-items: center;
   text-align: center;
 }
+.col-md-8 {
+  display: flex;
+  margin: 0 auto;
+  text-align: center;
+}
+
 
 .centered-content {
   display: flex;
