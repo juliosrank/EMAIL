@@ -7,12 +7,12 @@ https://www.linkedin.com/in/juliosrank/ -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador de Assinatura de E-mail</title>
+  <title>Gerador de Assinatura de E-mail | Atrio Hotel Management</title>
   
-  <!-- Fontes: Inter & Source Sans Pro -->
+  <!-- Fontes: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css">
 </head>
@@ -21,12 +21,15 @@ https://www.linkedin.com/in/juliosrank/ -->
     <!-- Header Simples e Direto -->
     <header class="app-header">
       <div class="header-inner">
-        <h1 class="app-title">Gerador de Assinatura de E-mail</h1>
+        <div class="header-brand">
+          <img src="logomarca/atrio.png" alt="Atrio Hotel Management" class="header-logo">
+          <h1 class="app-title">Gerador de Assinatura de E-mail</h1>
+        </div>
         <button type="button" id="btn-help" class="btn-help">Como Configurar</button>
       </div>
     </header>
 
-    <!-- Área Principal de Conteúdo (Sem Rolagem) -->
+    <!-- Área Principal de Conteúdo -->
     <main class="main-content">
       <div class="workspace-grid">
         
@@ -40,24 +43,24 @@ https://www.linkedin.com/in/juliosrank/ -->
           <form id="signature-form" class="form-body" onsubmit="event.preventDefault();">
             <div class="form-group">
               <label for="nome">Nome Completo</label>
-              <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" autocomplete="name">
+              <input type="text" id="nome" name="nome" placeholder="Ex: Lyssa Lima" autocomplete="name">
             </div>
 
             <div class="form-row">
               <div class="form-group col-half">
                 <label for="cargo">Cargo</label>
-                <input type="text" id="cargo" name="cargo" placeholder="Digite seu cargo">
+                <input type="text" id="cargo" name="cargo" placeholder="Ex: Contas a Pagar">
               </div>
 
               <div class="form-group col-half">
                 <label for="setor">Setor</label>
-                <input type="text" id="setor" name="setor" placeholder="Digite seu setor">
+                <input type="text" id="setor" name="setor" placeholder="Ex: Financeiro">
               </div>
             </div>
 
             <div class="form-group">
-              <label for="email">E-mail</label>
-              <input type="email" id="email" name="email" placeholder="Digite seu e-mail institucional" autocomplete="email">
+              <label for="email">E-mail / Microsoft Teams</label>
+              <input type="email" id="email" name="email" placeholder="Ex: lyssa.lima@atriohoteis.com.br" autocomplete="email">
             </div>
 
             <div class="form-group">
@@ -145,8 +148,8 @@ https://www.linkedin.com/in/juliosrank/ -->
           <div class="guide-box">
             <h4>Método 1: Instalação Automática (.bat) - Recomendado</h4>
             <p>1. Preencha seus dados no formulário e clique no botão <strong>"Instalar no Outlook Desktop (.bat)"</strong>.</p>
-            <p>2. Abra o arquivo baixado. Ele criará os arquivos <code>Machado de Assis.htm</code> e <code>.txt</code> diretamente na sua pasta oficial de assinaturas (<code>%APPDATA%\Microsoft\Signatures</code>).</p>
-            <p>3. Abra o Outlook: sua nova assinatura já estará pronta para uso!</p>
+            <p>2. Abra o arquivo baixado. Ele criará os arquivos <code>Atrio Hotel Management.htm</code> e <code>.txt</code> diretamente na pasta de assinaturas (<code>%APPDATA%\Microsoft\Signatures</code>).</p>
+            <p>3. Abra ou reinicie o Outlook: sua nova assinatura já estará disponível!</p>
           </div>
 
           <div class="guide-box">
@@ -154,7 +157,7 @@ https://www.linkedin.com/in/juliosrank/ -->
             <ol>
               <li>Copie a assinatura clicando no botão <strong>"Copiar Assinatura"</strong>.</li>
               <li>No Outlook Desktop, vá em <strong>Arquivo</strong> &rarr; <strong>Opções</strong> &rarr; <strong>Email</strong> &rarr; <strong>Assinaturas</strong>.</li>
-              <li>Clique em <strong>Novo</strong>, digite um nome e cole no campo de texto (<strong>Ctrl + V</strong>).</li>
+              <li>Clique em <strong>Novo</strong>, digite <em>Atrio Hotel Management</em> e cole (<strong>Ctrl + V</strong>) na caixa de texto.</li>
               <li>Clique em <strong>OK</strong> para salvar.</li>
             </ol>
           </div>
@@ -167,7 +170,7 @@ https://www.linkedin.com/in/juliosrank/ -->
             <ol>
               <li>Preencha seus dados e clique em <strong>"Copiar Assinatura"</strong>.</li>
               <li>Clique no botão <strong>"Inserir no Outlook Web"</strong> para acessar a tela de assinaturas.</li>
-              <li>Clique em <strong>"+ Nova assinatura"</strong>, dê um nome e cole (<strong>Ctrl + V</strong>) na caixa de edição.</li>
+              <li>Clique em <strong>"+ Nova assinatura"</strong>, digite <em>Atrio</em> e cole (<strong>Ctrl + V</strong>) na caixa de edição.</li>
               <li>Defina como padrão para novas mensagens e respostas.</li>
               <li>Clique em <strong>Salvar</strong>.</li>
             </ol>

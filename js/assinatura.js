@@ -1,6 +1,6 @@
 /**
  * Gerador de Assinaturas de E-mail
- * Colégio Católica Machado de Assis
+ * Atrio Hotel Management
  * Autor: Julio Scheffmacher Rank
  */
 
@@ -31,89 +31,67 @@
   const toastContainer = document.getElementById('toast-container');
 
   /**
-   * Constrói o HTML oficial da assinatura em tamanho natural (640px)
+   * Constrói o HTML oficial da assinatura Atrio Hotel Management
    */
   function buildSignatureHTML(data) {
-    const nome = escapeHtml(data.nome) || '<span style="color:#94a3b8">Nome Completo</span>';
-    const cargo = escapeHtml(data.cargo) || '<span style="color:#94a3b8">Cargo</span>';
-    const setor = escapeHtml(data.setor) || '<span style="color:#94a3b8">Setor</span>';
-    const email = escapeHtml(data.email) || '<span style="color:#94a3b8">email@cecma.edu.br</span>';
-    const telefone = escapeHtml(data.telefone) || '<span style="color:#94a3b8">(00) 00000-0000</span>';
+    const nome = escapeHtml(data.nome) || '<span style="color:#94a3b8">NOME COMPLETO</span>';
+    
+    // Cargo e Setor
+    let cargoSetor = '';
+    if (data.cargo && data.setor) {
+      cargoSetor = `${escapeHtml(data.cargo)} • ${escapeHtml(data.setor)}`;
+    } else if (data.cargo) {
+      cargoSetor = escapeHtml(data.cargo);
+    } else if (data.setor) {
+      cargoSetor = escapeHtml(data.setor);
+    } else {
+      cargoSetor = '<span style="color:#94a3b8">CARGO / SETOR</span>';
+    }
 
+    const email = escapeHtml(data.email) || '<span style="color:#94a3b8">nome.sobrenome@atriohoteis.com.br</span>';
     const emailLink = data.email 
-      ? `<a href="mailto:${escapeHtml(data.email)}" style="color:rgb(40,52,138); text-decoration:none;">${escapeHtml(data.email)}</a>` 
+      ? `<a href="mailto:${escapeHtml(data.email)}" style="color:#475569; text-decoration:none;">${escapeHtml(data.email)}</a>` 
       : email;
+
+    const telefoneHTML = data.telefone
+      ? `<p style="margin:2px 0px 0px 0px; font-family:'Inter', Arial, sans-serif; font-size:11px; color:#475569; line-height:16px;">${escapeHtml(data.telefone)}</p>`
+      : '';
 
     return `
 <div id="x_Signature">
-  <table style="font-family: arial, 'helvetica neue', helvetica, sans-serif; font-size: 14px; text-align: start; border-collapse: collapse; border-spacing: 0px; width: 640px; background-color: #ffffff;" width="640">
+  <table style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-align: start; border-collapse: collapse; border-spacing: 0px; background-color: #ffffff; width: auto;" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
-        <td align="left" style="margin:0px; padding: 0px 0px 8px 0px;">
-          <table align="left" style="border-collapse:collapse; float:left;">
-            <tbody>
-              <tr>
-                <td valign="top" style="margin:0px; width:530px;">
-                  <table width="100%" style="border-collapse:collapse;">
-                    <tbody>
-                      <tr>
-                        <td align="left" style="padding:0px 0px 4px 30px; margin:0px;">
-                          <h1 style="margin:0px; line-height:22px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; font-size:20px; font-weight:bold; color:rgb(0,138,209);">${nome}</h1>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td align="left" style="padding:4px 0px 8px 30px; margin:0px;">
-                          <p style="margin:0px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; line-height:16px; font-size:14px; color:rgb(40,52,138);"><i>${cargo}</i><br aria-hidden="true">${setor}</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td align="left" style="padding:6px 0px 0px 30px; margin:0px;">
-                          <div style="padding-left:8px; margin:0px; border-left:3px solid rgb(0,138,209)!important;">
-                            <p style="margin:0px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; line-height:18px; font-size:14px; color:rgb(40,52,138);">${emailLink}</p>
-                            <p style="margin:0px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; line-height:18px; font-size:14px; color:rgb(40,52,138);">${telefone}</p>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <table align="right" style="border-collapse:collapse; float:right;">
-            <tbody>
-              <tr>
-                <td align="right" style="margin:0px; width:50px; background-color:#ffffff;">
-                  <table width="100%" style="border-collapse:collapse;">
-                    <tbody>
-                      <tr>
-                        <td align="right" style="padding:0px 8px 0px 0px; margin:0px;">
-                          <img data-imagetype="External" src="https://www.ubec.edu.br/mkt/email-mkt/mail/unidades_de_missao/images/SELO-GPTW.png" alt="GPTW" width="31" style="display:block; outline:none; border:none;">
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- Coluna da Logomarca -->
+        <td valign="middle" align="center" style="padding: 10px 24px 10px 0px; border-right: 1.5px solid #cbd5e1; width: 190px;">
+          <a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:block;">
+            <img data-imagetype="External" src="logomarca/atrio.png" alt="Atrio Hotel Management" width="180" style="display:block; outline:none; border:none; width:180px; max-width:180px; height:auto;">
+          </a>
         </td>
-      </tr>
-      <tr>
-        <td align="left" style="margin:0px; background-color:#ffffff;">
-          <table width="100%" style="border-collapse:collapse;">
+
+        <!-- Coluna de Dados -->
+        <td valign="middle" align="left" style="padding: 8px 0px 8px 24px;">
+          <table cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
             <tbody>
               <tr>
-                <td valign="top" style="margin:0px; width:640px;">
-                  <table width="100%" style="border-collapse:collapse;">
-                    <tbody>
-                      <tr>
-                        <td style="margin:0px; font-size:0px; line-height:0px;">
-                          <img data-imagetype="External" src="logomarca/cecma.png" alt="Colégio Católica Machado de Assis" width="634" style="display:block; outline:none; border:none; width:634px; max-width:100%; height:auto;">
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <td style="padding: 0px 0px 2px 0px;">
+                  <h1 style="margin:0px; font-family:'Inter', Arial, sans-serif; font-size:18px; font-weight:700; color:#1e2229; letter-spacing:1.5px; text-transform:uppercase; line-height:22px;">${nome}</h1>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 0px 0px 12px 0px;">
+                  <p style="margin:0px; font-family:'Inter', Arial, sans-serif; font-size:12px; font-weight:600; color:#DB9B0E; letter-spacing:1.5px; text-transform:uppercase; line-height:16px;">${cargoSetor}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 0px 0px 8px 0px;">
+                  <p style="margin:0px; font-family:'Inter', Arial, sans-serif; font-size:11px; color:#475569; line-height:16px;">Microsoft Teams:<br>${emailLink}</p>
+                  ${telefoneHTML}
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0px 0px 0px;">
+                  <p style="margin:0px; font-family:'Inter', Arial, sans-serif; font-size:12px; font-weight:700; color:#DB9B0E; letter-spacing:3.5px; text-transform:uppercase; line-height:16px;"><a href="https://atriohoteis.com.br" target="_blank" style="color:#DB9B0E; text-decoration:none;">ATRIOHOTEIS.COM.BR</a></p>
                 </td>
               </tr>
             </tbody>
@@ -228,20 +206,21 @@ ${buildSignatureHTML(data)}
 </body>
 </html>`;
 
-    const plainText = `${data.nome || 'Nome Completo'}
+    const plainText = `${data.nome || 'NOME COMPLETO'}
 ${data.cargo || ''} - ${data.setor || ''}
-${data.email || ''} | ${data.telefone || ''}
-Colégio Católica Machado de Assis`;
+Microsoft Teams: ${data.email || ''}
+${data.telefone || ''}
+ATRIOHOTEIS.COM.BR`;
 
     const base64Html = btoa(unescape(encodeURIComponent(rawHtml)));
     const base64Txt = btoa(unescape(encodeURIComponent(plainText)));
 
     const batContent = `@echo off
 chcp 65001 >nul
-title Instalador de Assinatura - Colégio Católica Machado de Assis
+title Instalador de Assinatura - Atrio Hotel Management
 cls
 echo ============================================================
-echo   INSTALADOR DE ASSINATURA - COLÉGIO CATÓLICA MACHADO DE ASSIS
+echo   INSTALADOR DE ASSINATURA - ATRIO HOTEL MANAGEMENT
 echo ============================================================
 echo.
 echo [1/3] Preparando pasta de assinaturas do Outlook...
@@ -249,16 +228,16 @@ set "SIG_DIR=%APPDATA%\\Microsoft\\Signatures"
 if not exist "%SIG_DIR%" mkdir "%SIG_DIR%"
 
 echo [2/3] Gravando arquivos da assinatura...
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Machado de Assis.htm', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Html}')), [System.Text.Encoding]::UTF8)"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Machado de Assis.txt', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Txt}')), [System.Text.Encoding]::UTF8)"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Atrio Hotel Management.htm', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Html}')), [System.Text.Encoding]::UTF8)"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Atrio Hotel Management.txt', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Txt}')), [System.Text.Encoding]::UTF8)"
 
 echo [3/3] Configurando assinatura padrao no Outlook...
-reg add "HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings" /v "NewSignature" /t REG_SZ /d "Machado de Assis" /f >nul 2>&1
-reg add "HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings" /v "ReplySignature" /t REG_SZ /d "Machado de Assis" /f >nul 2>&1
+reg add "HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings" /v "NewSignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
+reg add "HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings" /v "ReplySignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
 
 echo.
 echo ============================================================
-echo   SUCESSO! Assinatura 'Machado de Assis' instalada!
+echo   SUCESSO! Assinatura 'Atrio Hotel Management' instalada!
 echo ============================================================
 echo.
 echo Abra ou reinicie o aplicativo Outlook Desktop para utilizar.
