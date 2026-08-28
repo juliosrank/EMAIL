@@ -1,6 +1,7 @@
 /**
- * Formatação dinâmica de Telefone Fixo
- * Padrão: (XX) XXXX-XXXX ou (XX) XXXXX-XXXX
+ * Formatação inteligente de Telefone (Fixo ou Celular)
+ * Suporta 10 dígitos: (XX) XXXX-XXXX
+ * Suporta 11 dígitos: (XX) XXXXX-XXXX
  */
 function formatarTelefone(value) {
   if (!value) return '';
@@ -33,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
       
       this.value = formatarTelefone(this.value);
       
-      // Ajuste básico de cursor
       if (this.selectionStart) {
         var diff = this.value.length - prevLen;
         this.setSelectionRange(startPos + diff, startPos + diff);

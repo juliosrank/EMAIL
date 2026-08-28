@@ -1,5 +1,4 @@
 <!-- Criado por Julio Scheffmacher Rank
-Sinta-se a vontade para melhorar
 https://github.com/juliosrank/
 https://www.linkedin.com/in/juliosrank/ -->
 
@@ -8,262 +7,116 @@ https://www.linkedin.com/in/juliosrank/ -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador de Assinatura de E-mail | Colégio Católica Machado de Assis</title>
-  <meta name="description" content="Gerador oficial de assinatura de e-mail para o Colégio Católica Machado de Assis (UBEC).">
+  <title>Gerador de Assinatura de E-mail</title>
   
-  <!-- Google Fonts: Inter & Source Sans Pro -->
+  <!-- Fontes: Inter & Source Sans Pro -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
   
-  <!-- Estilos Customizados -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-wrapper">
-    <!-- Header -->
+  <div class="app-layout">
+    <!-- Header Simples e Direto -->
     <header class="app-header">
-      <div class="header-container">
-        <div class="brand-info">
-          <div class="brand-badge">
-            <span class="pulse-dot"></span>
-            UBEC • Unidade Machado de Assis
-          </div>
-          <h1 class="app-title">Gerador de Assinatura de E-mail</h1>
-          <p class="app-subtitle">Padronização institucional para o <strong>Colégio Católica Machado de Assis</strong></p>
-        </div>
-        <div class="header-actions">
-          <button id="btn-help" class="btn-secondary-header" title="Instruções de Configuração">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-              <line x1="12" y1="17" x2="12.01" y2="17"></line>
-            </svg>
-            Como Configurar
-          </button>
-        </div>
+      <div class="header-inner">
+        <h1 class="app-title">Gerador de Assinatura de E-mail</h1>
+        <button type="button" id="btn-help" class="btn-help">Como Configurar</button>
       </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="main-container">
-      <div class="content-grid">
+    <!-- Área Principal de Conteúdo (Sem Rolagem) -->
+    <main class="main-content">
+      <div class="workspace-grid">
         
-        <!-- Formulário (Coluna Esquerda) -->
-        <section class="card form-card">
-          <div class="card-header">
-            <div class="card-header-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </div>
-            <div class="card-header-text">
-              <h2>Seus Dados</h2>
-              <p>Preencha os campos para atualizar sua assinatura em tempo real</p>
-            </div>
-            <div class="card-header-actions">
-              <button type="button" id="btn-demo-data" class="btn-text" title="Preencher com exemplo">Exemplo</button>
-              <button type="button" id="btn-clear-data" class="btn-text text-danger" title="Limpar formulário">Limpar</button>
-            </div>
+        <!-- Formulário (Lado Esquerdo) -->
+        <section class="panel form-panel">
+          <div class="panel-header">
+            <h2>Dados Pessoais</h2>
+            <button type="button" id="btn-clear-data" class="btn-link" title="Limpar formulário">Limpar</button>
           </div>
 
-          <form id="signature-form" class="signature-form" onsubmit="event.preventDefault();">
+          <form id="signature-form" class="form-body" onsubmit="event.preventDefault();">
             <div class="form-group">
-              <label for="nome">
-                <span>Nome Completo</span>
-                <span class="required-badge">*</span>
-              </label>
-              <div class="input-wrapper">
-                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                <input type="text" id="nome" name="nome" placeholder="Ex: Maria Silva" autocomplete="name" required>
-              </div>
+              <label for="nome">Nome Completo</label>
+              <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" autocomplete="name">
             </div>
 
             <div class="form-row">
               <div class="form-group col-half">
-                <label for="cargo">
-                  <span>Cargo / Função</span>
-                  <span class="required-badge">*</span>
-                </label>
-                <div class="input-wrapper">
-                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                  </svg>
-                  <input type="text" id="cargo" name="cargo" placeholder="Ex: Coordenadora Pedagógica">
-                </div>
+                <label for="cargo">Cargo</label>
+                <input type="text" id="cargo" name="cargo" placeholder="Digite seu cargo">
               </div>
 
               <div class="form-group col-half">
-                <label for="setor">
-                  <span>Setor / Departamento</span>
-                </label>
-                <div class="input-wrapper">
-                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                  </svg>
-                  <input type="text" id="setor" name="setor" placeholder="Ex: Ensino Fundamental II">
-                </div>
+                <label for="setor">Setor</label>
+                <input type="text" id="setor" name="setor" placeholder="Digite seu setor">
               </div>
             </div>
 
             <div class="form-group">
-              <label for="email">
-                <span>E-mail Institucional</span>
-                <span class="required-badge">*</span>
-              </label>
-              <div class="input-wrapper">
-                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-                <input type="email" id="email" name="email" placeholder="Ex: maria.silva@cecma.edu.br">
-              </div>
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" placeholder="Digite seu e-mail institucional" autocomplete="email">
             </div>
 
-            <div class="form-row">
-              <div class="form-group col-half">
-                <label for="telefone">
-                  <span>Telefone Fixo</span>
-                </label>
-                <div class="input-wrapper">
-                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                  </svg>
-                  <input type="tel" id="telefone" name="telefone" placeholder="(00) 0000-0000">
-                </div>
-              </div>
-
-              <div class="form-group col-half">
-                <label for="celular">
-                  <span>Celular / WhatsApp</span>
-                </label>
-                <div class="input-wrapper">
-                  <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
-                  </svg>
-                  <input type="tel" id="celular" name="celular" placeholder="(00) 00000-0000">
-                </div>
-              </div>
-            </div>
-
-            <div class="form-unit-info">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
-              <span>Unidade configurada: <strong>Colégio Católica Machado de Assis</strong></span>
+            <div class="form-group">
+              <label for="telefone">Telefone</label>
+              <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000">
             </div>
           </form>
         </section>
 
-        <!-- Visualizador & Ações (Coluna Direita) -->
-        <section class="card preview-card">
-          <div class="card-header">
-            <div class="card-header-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </div>
-            <div class="card-header-text">
-              <h2>Pré-visualização da Assinatura</h2>
-              <p>Visualização em tempo real formatada para clientes de e-mail</p>
-            </div>
-            <div class="preview-controls">
-              <button type="button" id="btn-toggle-zoom" class="btn-chip active" title="Alternar escala de exibição">
-                <span id="zoom-text">Zoom 100%</span>
-              </button>
-            </div>
+        <!-- Visualizador e Ações (Lado Direito) -->
+        <section class="panel preview-panel">
+          <div class="panel-header">
+            <h2>Pré-visualização</h2>
+            <div class="preview-badge">Atualização em tempo real</div>
           </div>
 
-          <!-- Janela Simulada de E-mail -->
-          <div class="email-mockup">
-            <div class="email-mockup-header">
-              <div class="email-dot dot-red"></div>
-              <div class="email-dot dot-yellow"></div>
-              <div class="email-dot dot-green"></div>
-              <span class="email-mockup-title">Nova Mensagem — Outlook</span>
-            </div>
-            
-            <div class="email-meta-preview">
-              <div class="email-meta-line">
-                <span class="meta-label">Para:</span>
-                <span class="meta-value">destinatario@exemplo.com.br</span>
-              </div>
-              <div class="email-meta-line">
-                <span class="meta-label">Assunto:</span>
-                <span class="meta-value">Assinatura de E-mail Institucional</span>
-              </div>
-            </div>
-
-            <div class="email-body-area">
-              <p class="sample-message-text">Olá,<br>Segue a assinatura com o padrão institucional do Colégio Católica Machado de Assis:</p>
-              
-              <!-- Container Renderizador da Assinatura -->
-              <div class="signature-render-container" id="signature-render-box">
-                <div id="signature-output" class="signature-output-wrapper">
-                  <!-- A assinatura HTML será renderizada aqui dinamicamente -->
-                </div>
+          <!-- Prancheta de Visualização da Assinatura -->
+          <div class="preview-canvas">
+            <div class="signature-stage">
+              <div id="signature-output" class="signature-output">
+                <!-- Assinatura renderizada via JS -->
               </div>
             </div>
           </div>
 
-          <!-- Barra de Ações Principais -->
+          <!-- Painel de Ações -->
           <div class="actions-panel">
-            <div class="primary-action">
-              <button type="button" id="btn-copy-signature" class="btn-primary-action">
-                <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                <span id="btn-copy-text">Copiar Assinatura Formatada</span>
-              </button>
-            </div>
+            <button type="button" id="btn-copy-signature" class="btn-action btn-copy">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span id="btn-copy-text">Copiar Assinatura</span>
+            </button>
 
-            <div class="integration-actions">
-              <!-- Botão Webmail Outlook -->
+            <div class="secondary-actions">
               <a href="https://outlook.cloud.microsoft/mail/options/accounts-category/signatures-subcategory/RoamingSignatureOption" 
                  target="_blank" 
                  rel="noopener noreferrer" 
-                 class="btn-integration btn-outlook-web"
-                 title="Abrir página direta de assinaturas do Outlook Web">
-                <div class="btn-integration-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="2" y1="12" x2="22" y2="12"></line>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                  </svg>
-                </div>
-                <div class="btn-integration-content">
-                  <span class="btn-integration-title">Inserir no Outlook Web</span>
-                  <span class="btn-integration-sub">Abrir configurações no navegador &rarr;</span>
-                </div>
+                 class="btn-action btn-web"
+                 title="Abrir página de configuração de assinaturas no Outlook Web">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span>Inserir no Outlook Web</span>
               </a>
 
-              <!-- Botão Outlook Desktop -->
               <button type="button" 
-                      id="btn-open-desktop-helper" 
-                      class="btn-integration btn-outlook-desktop"
-                      title="Opções para inserir no aplicativo Outlook Desktop">
-                <div class="btn-integration-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                  </svg>
-                </div>
-                <div class="btn-integration-content">
-                  <span class="btn-integration-title">Inserir no Outlook Desktop</span>
-                  <span class="btn-integration-sub">Abrir pasta / Ver tutorial &rarr;</span>
-                </div>
+                      id="btn-install-desktop" 
+                      class="btn-action btn-desktop"
+                      title="Instalar automaticamente os arquivos de assinatura no seu Outlook Desktop">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Instalar no Outlook Desktop (.bat)</span>
               </button>
             </div>
           </div>
@@ -271,139 +124,68 @@ https://www.linkedin.com/in/juliosrank/ -->
 
       </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="app-footer">
-      <div class="footer-container">
-        <p>Colégio Católica Machado de Assis &copy; União Brasileira de Educação Católica (UBEC)</p>
-        <p class="footer-credits">
-          Desenvolvido por <a href="https://www.linkedin.com/in/juliosrank/" target="_blank" rel="noopener noreferrer">Julio Scheffmacher Rank</a> • 
-          <a href="https://github.com/juliosrank/" target="_blank" rel="noopener noreferrer">GitHub</a>
-        </p>
-      </div>
-    </footer>
   </div>
 
-  <!-- Modal de Ajuda / Configuração Outlook Desktop & Web -->
+  <!-- Modal de Ajuda -->
   <div class="modal-overlay" id="help-modal" aria-hidden="true">
-    <div class="modal-card">
+    <div class="modal-dialog">
       <div class="modal-header">
-        <div class="modal-title-wrap">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-          </svg>
-          <h3>Como Inserir sua Assinatura</h3>
-        </div>
-        <button type="button" class="btn-close-modal" id="btn-close-modal" aria-label="Fechar Modal">&times;</button>
+        <h3>Como Configurar sua Assinatura</h3>
+        <button type="button" class="btn-close" id="btn-close-modal" aria-label="Fechar">&times;</button>
       </div>
 
-      <!-- Abas de Navegação -->
       <div class="modal-tabs">
-        <button type="button" class="tab-btn active" data-tab="tab-desktop">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-          </svg>
-          Outlook Desktop (Windows)
-        </button>
-        <button type="button" class="tab-btn" data-tab="tab-web">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-          </svg>
-          Outlook Web (Navegador)
-        </button>
+        <button type="button" class="tab-item active" data-tab="tab-desktop">Outlook Desktop</button>
+        <button type="button" class="tab-item" data-tab="tab-web">Outlook Web</button>
       </div>
 
-      <!-- Conteúdo das Abas -->
       <div class="modal-body">
-        
-        <!-- Aba 1: Outlook Desktop -->
-        <div class="tab-pane active" id="tab-desktop">
-          <div class="helper-box helper-primary">
-            <h4>🚀 Atalho Rápido para a Pasta de Assinaturas</h4>
-            <p>O Windows armazena as assinaturas do aplicativo Outlook na pasta oficial de assinaturas. Escolha uma das opções abaixo:</p>
-            
-            <div class="desktop-shortcut-grid">
-              <div class="shortcut-option-card">
-                <h5>Opção 1: Copiar Caminho da Pasta</h5>
-                <div class="code-copy-box">
-                  <code>%APPDATA%\Microsoft\Signatures</code>
-                  <button type="button" id="btn-copy-path" class="btn-copy-code" title="Copiar caminho">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                    Copiar
-                  </button>
-                </div>
-                <p class="step-hint">💡 Pressione <strong>Win + R</strong> no teclado, cole o caminho e aperte <strong>Enter</strong>.</p>
-              </div>
-
-              <div class="shortcut-option-card">
-                <h5>Opção 2: Baixar Atalho Direto</h5>
-                <p class="shortcut-desc">Baixe um atalho automático que abre a pasta no Windows Explorer com 1 clique:</p>
-                <button type="button" id="btn-download-shortcut" class="btn-download-shortcut">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>
-                  Baixar Atalho (.cmd)
-                </button>
-              </div>
-            </div>
+        <!-- Guia Desktop -->
+        <div class="tab-content active" id="tab-desktop">
+          <div class="guide-box">
+            <h4>Método 1: Instalação Automática (.bat) - Recomendado</h4>
+            <p>1. Preencha seus dados no formulário e clique no botão <strong>"Instalar no Outlook Desktop (.bat)"</strong>.</p>
+            <p>2. Abra o arquivo baixado. Ele criará os arquivos <code>Machado de Assis.htm</code> e <code>.txt</code> diretamente na sua pasta oficial de assinaturas (<code>%APPDATA%\Microsoft\Signatures</code>).</p>
+            <p>3. Abra o Outlook: sua nova assinatura já estará pronta para uso!</p>
           </div>
 
-          <div class="steps-container">
-            <h4>📋 Passo a Passo pelo Menu do Outlook Desktop:</h4>
-            <ol class="step-list">
-              <li>Copie a assinatura gerada usando o botão <strong>"Copiar Assinatura Formatada"</strong>.</li>
-              <li>Abra o aplicativo <strong>Outlook</strong> no seu computador.</li>
-              <li>Clique em <strong>Arquivo</strong> &rarr; <strong>Opções</strong> &rarr; <strong>Email</strong>.</li>
-              <li>Clique no botão <strong>Assinaturas...</strong>.</li>
-              <li>Clique em <strong>Novo</strong>, digite um nome (ex: <em>Machado de Assis</em>).</li>
-              <li>Na caixa de edição de texto abaixo, pressione <strong>Ctrl + V</strong> para colar a assinatura.</li>
-              <li>Em <em>"Escolher assinatura padrão"</em>, selecione a nova assinatura para <em>Novas mensagens</em> e <em>Respostas/encaminhamentos</em>.</li>
-              <li>Clique em <strong>OK</strong> para salvar!</li>
+          <div class="guide-box">
+            <h4>Método 2: Manual pelo Outlook</h4>
+            <ol>
+              <li>Copie a assinatura clicando no botão <strong>"Copiar Assinatura"</strong>.</li>
+              <li>No Outlook Desktop, vá em <strong>Arquivo</strong> &rarr; <strong>Opções</strong> &rarr; <strong>Email</strong> &rarr; <strong>Assinaturas</strong>.</li>
+              <li>Clique em <strong>Novo</strong>, digite um nome e cole no campo de texto (<strong>Ctrl + V</strong>).</li>
+              <li>Clique em <strong>OK</strong> para salvar.</li>
             </ol>
           </div>
         </div>
 
-        <!-- Aba 2: Outlook Web -->
-        <div class="tab-pane" id="tab-web">
-          <div class="helper-box">
-            <h4>🌐 Passo a Passo para Outlook Web (Navegador)</h4>
-            <ol class="step-list">
-              <li>Copie a assinatura gerada clicando em <strong>"Copiar Assinatura Formatada"</strong>.</li>
-              <li>Clique no botão <a href="https://outlook.cloud.microsoft/mail/options/accounts-category/signatures-subcategory/RoamingSignatureOption" target="_blank" rel="noopener noreferrer" class="link-highlight"><strong>"Inserir no Outlook Web"</strong></a> para abrir diretamente a tela de assinaturas.</li>
-              <li>Na página que se abre, clique em <strong>"+ Nova assinatura"</strong>.</li>
-              <li>Dê um nome para a assinatura (ex: <em>Institucional Machado de Assis</em>).</li>
-              <li>Clique no campo de edição e pressione <strong>Ctrl + V</strong> para colar a assinatura formatada.</li>
-              <li>Em <em>"Selecionar assinaturas padrão"</em>, defina a nova assinatura para <strong>Para novas mensagens</strong> e <strong>Para respostas/encaminhamentos</strong>.</li>
-              <li>Clique em <strong>Salvar</strong> no canto inferior direito. Pronto!</li>
+        <!-- Guia Web -->
+        <div class="tab-content" id="tab-web">
+          <div class="guide-box">
+            <h4>Configuração no Outlook Web (Navegador)</h4>
+            <ol>
+              <li>Preencha seus dados e clique em <strong>"Copiar Assinatura"</strong>.</li>
+              <li>Clique no botão <strong>"Inserir no Outlook Web"</strong> para acessar a tela de assinaturas.</li>
+              <li>Clique em <strong>"+ Nova assinatura"</strong>, dê um nome e cole (<strong>Ctrl + V</strong>) na caixa de edição.</li>
+              <li>Defina como padrão para novas mensagens e respostas.</li>
+              <li>Clique em <strong>Salvar</strong>.</li>
             </ol>
           </div>
         </div>
-
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn-primary" id="btn-modal-got-it">Entendi, fechar</button>
+        <button type="button" class="btn-modal-close" id="btn-modal-close">Fechar</button>
       </div>
     </div>
   </div>
 
   <!-- Toast Notification Container -->
-  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+  <div class="toast-container" id="toast-container"></div>
 
   <!-- Scripts -->
   <script src="js/formatarTelefone.js"></script>
-  <script src="js/formatarCelular.js"></script>
   <script src="js/assinatura.js"></script>
 </body>
 </html>
