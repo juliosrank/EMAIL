@@ -31,11 +31,11 @@
   const toastContainer = document.getElementById('toast-container');
 
   /**
-   * Constrói o HTML da assinatura para exibição e cópia
+   * Constrói o HTML oficial da assinatura em tamanho natural (640px)
    */
   function buildSignatureHTML(data) {
     const nome = escapeHtml(data.nome) || '<span style="color:#94a3b8">Nome Completo</span>';
-    const cargo = escapeHtml(data.cargo) || '<span style="color:#94a3b8">Cargo / Função</span>';
+    const cargo = escapeHtml(data.cargo) || '<span style="color:#94a3b8">Cargo</span>';
     const setor = escapeHtml(data.setor) || '<span style="color:#94a3b8">Setor</span>';
     const email = escapeHtml(data.email) || '<span style="color:#94a3b8">email@cecma.edu.br</span>';
     const telefone = escapeHtml(data.telefone) || '<span style="color:#94a3b8">(00) 00000-0000</span>';
@@ -46,86 +46,82 @@
 
     return `
 <div id="x_Signature">
-  <div>
-    <div class="R1UVb" style="height: auto; width: 100%;" has-hovered="true">
-      <table style="font-family: arial, 'helvetica neue', helvetica, sans-serif; font-size: medium; text-align: start; border-collapse: collapse; border-spacing: 0px; width: 640px; background-color: rgb(255, 255, 255); transform: scale(0.460938, 0.460938); transform-origin: left top;" min-scale="0.4609375">
-        <tbody>
-          <tr>
-            <td align="left" style="margin:0px">
-              <table align="left" style="border-collapse:collapse; float:left">
-                <tbody>
-                  <tr>
-                    <td valign="top" style="margin:0px; width:530px">
-                      <table width="100%" style="border-collapse:collapse">
-                        <tbody>
-                          <tr>
-                            <td align="left" style="padding:5px 0px 0px 35px; margin:0px">
-                              <h1 style="margin:0px; line-height:20px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; font-size:20px; font-weight:bold; color:rgb(0,138,209)">${nome}</h1>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td align="left" style="padding:10px 0px 0px 35px; margin:0px">
-                              <p style="margin:0px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; line-height:14px; font-size:14px; color:rgb(40,52,138)"><i>${cargo}</i><br aria-hidden="true">${setor}</p>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td align="left" style="padding:15px 0px 10px 35px; margin:0px">
-                              <div style="padding-left:5px; margin:0px; border-left:3px solid rgb(0,138,209)!important">
-                                <p style="margin:0px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; line-height:15px; font-size:15px; color:rgb(40,52,138)">${emailLink}</p>
-                                <p style="margin:0px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; line-height:15px; font-size:15px; color:rgb(40,52,138)">${telefone}</p>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <table align="right" style="border-collapse:collapse; float:right">
-                <tbody>
-                  <tr>
-                    <td align="left" style="margin:0px; width:50px; background-color:rgb(255,255,255)">
-                      <table width="100%" style="border-collapse:collapse">
-                        <tbody>
-                          <tr>
-                            <td align="right" style="padding:0px 10px 0px 0px; margin:0px; font-size:0px">
-                              <img data-imagetype="External" src="https://www.ubec.edu.br/mkt/email-mkt/mail/unidades_de_missao/images/SELO-GPTW.png" alt="GPTW" width="31" style="display:block; outline:none; border:none;">
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td align="left" style="margin:0px; background-color:rgb(255,255,255)">
-              <table width="100%" style="border-collapse:collapse">
-                <tbody>
-                  <tr>
-                    <td valign="top" style="margin:0px; width:600px">
-                      <table width="100%" style="border-collapse:collapse">
-                        <tbody>
-                          <tr>
-                            <td style="margin:0px; font-size:0px">
-                              <img data-imagetype="External" src="logomarca/cecma.png" alt="Colégio Católica Machado de Assis" width="634" style="display:block; outline:none; border:none; max-width:634px;">
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <table style="font-family: arial, 'helvetica neue', helvetica, sans-serif; font-size: 14px; text-align: start; border-collapse: collapse; border-spacing: 0px; width: 640px; background-color: #ffffff;" width="640">
+    <tbody>
+      <tr>
+        <td align="left" style="margin:0px; padding: 0px 0px 8px 0px;">
+          <table align="left" style="border-collapse:collapse; float:left;">
+            <tbody>
+              <tr>
+                <td valign="top" style="margin:0px; width:530px;">
+                  <table width="100%" style="border-collapse:collapse;">
+                    <tbody>
+                      <tr>
+                        <td align="left" style="padding:0px 0px 4px 30px; margin:0px;">
+                          <h1 style="margin:0px; line-height:22px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; font-size:20px; font-weight:bold; color:rgb(0,138,209);">${nome}</h1>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="left" style="padding:4px 0px 8px 30px; margin:0px;">
+                          <p style="margin:0px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; line-height:16px; font-size:14px; color:rgb(40,52,138);"><i>${cargo}</i><br aria-hidden="true">${setor}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="left" style="padding:6px 0px 0px 30px; margin:0px;">
+                          <div style="padding-left:8px; margin:0px; border-left:3px solid rgb(0,138,209)!important;">
+                            <p style="margin:0px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; line-height:18px; font-size:14px; color:rgb(40,52,138);">${emailLink}</p>
+                            <p style="margin:0px; font-family:'source sans pro','helvetica neue',helvetica,arial,sans-serif; line-height:18px; font-size:14px; color:rgb(40,52,138);">${telefone}</p>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table align="right" style="border-collapse:collapse; float:right;">
+            <tbody>
+              <tr>
+                <td align="right" style="margin:0px; width:50px; background-color:#ffffff;">
+                  <table width="100%" style="border-collapse:collapse;">
+                    <tbody>
+                      <tr>
+                        <td align="right" style="padding:0px 8px 0px 0px; margin:0px;">
+                          <img data-imagetype="External" src="https://www.ubec.edu.br/mkt/email-mkt/mail/unidades_de_missao/images/SELO-GPTW.png" alt="GPTW" width="31" style="display:block; outline:none; border:none;">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" style="margin:0px; background-color:#ffffff;">
+          <table width="100%" style="border-collapse:collapse;">
+            <tbody>
+              <tr>
+                <td valign="top" style="margin:0px; width:640px;">
+                  <table width="100%" style="border-collapse:collapse;">
+                    <tbody>
+                      <tr>
+                        <td style="margin:0px; font-size:0px; line-height:0px;">
+                          <img data-imagetype="External" src="logomarca/cecma.png" alt="Colégio Católica Machado de Assis" width="634" style="display:block; outline:none; border:none; width:634px; max-width:100%; height:auto;">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
     `.trim();
   }
@@ -222,7 +218,6 @@
   function generateDesktopInstaller() {
     const data = getFormData();
     
-    // Constrói HTML limpo para o arquivo .htm do Outlook
     const rawHtml = `<!DOCTYPE html>
 <html>
 <head>
@@ -238,7 +233,6 @@ ${data.cargo || ''} - ${data.setor || ''}
 ${data.email || ''} | ${data.telefone || ''}
 Colégio Católica Machado de Assis`;
 
-    // Codifica em Base64 para gravação segura via PowerShell sem erros de escape em CMD
     const base64Html = btoa(unescape(encodeURIComponent(rawHtml)));
     const base64Txt = btoa(unescape(encodeURIComponent(plainText)));
 
@@ -370,7 +364,7 @@ pause
 
   document.addEventListener('DOMContentLoaded', () => {
     setupEvents();
-    renderSignature(); // Renderiza estado inicial limpo
+    renderSignature();
   });
 
 })();
