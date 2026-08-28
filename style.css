@@ -283,6 +283,12 @@ html, body {
   height: auto;
 }
 
+.signature-output img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
 /* Painel de Ações */
 .actions-panel {
   padding: 12px 18px;

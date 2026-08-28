@@ -31,9 +31,9 @@
   const toastContainer = document.getElementById('toast-container');
 
   /**
-   * Constrói o HTML oficial da assinatura Atrio Hotel Management
+   * Constrói o HTML da assinatura para a Web e Área de Transferência
    */
-  function buildSignatureHTML(data) {
+  function buildSignatureHTML(data, isForDesktopFile = false) {
     const nome = escapeHtml(data.nome) || '<span style="color:#94a3b8">NOME COMPLETO</span>';
     
     // Cargo e Setor
@@ -48,7 +48,7 @@
       cargoSetor = '<span style="color:#94a3b8">CARGO / SETOR</span>';
     }
 
-    const email = escapeHtml(data.email) || '<span style="color:#94a3b8">nome.sobrenome@atriohoteis.com.br</span>';
+    const email = escapeHtml(data.email) || '<span style="color:#94a3b8">email@atriohoteis.com.br</span>';
     const emailLink = data.email 
       ? `<a href="mailto:${escapeHtml(data.email)}" style="color:#475569; text-decoration:none;">${escapeHtml(data.email)}</a>` 
       : email;
@@ -57,15 +57,18 @@
       ? `<p style="margin:2px 0px 0px 0px; font-family:'Inter', Arial, sans-serif; font-size:11px; color:#475569; line-height:16px;">${escapeHtml(data.telefone)}</p>`
       : '';
 
+    // No desktop do Outlook, a imagem fica na pasta _arquivos da assinatura
+    const logoSrc = isForDesktopFile ? 'Atrio Hotel Management_arquivos/image001.png' : 'logomarca/atrio.png';
+
     return `
 <div id="x_Signature">
   <table style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-align: start; border-collapse: collapse; border-spacing: 0px; background-color: #ffffff; width: auto;" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <!-- Coluna da Logomarca -->
-        <td valign="middle" align="center" style="padding: 10px 24px 10px 0px; border-right: 1.5px solid #cbd5e1; width: 190px;">
+        <td valign="middle" align="center" style="padding: 10px 24px 10px 0px; border-right: 1.5px solid #cbd5e1; width: 200px;">
           <a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:block;">
-            <img data-imagetype="External" src="logomarca/atrio.png" alt="Atrio Hotel Management" width="180" style="display:block; outline:none; border:none; width:180px; max-width:180px; height:auto;">
+            <img data-imagetype="External" src="${logoSrc}" alt="Atrio Hotel Management" width="200" height="39" style="display:block; outline:none; border:none; width:200px; height:39px; max-width:200px;">
           </a>
         </td>
 
@@ -128,7 +131,7 @@
 
   function renderSignature() {
     const data = getFormData();
-    signatureOutput.innerHTML = buildSignatureHTML(data);
+    signatureOutput.innerHTML = buildSignatureHTML(data, false);
   }
 
   /**
@@ -191,29 +194,65 @@
   }
 
   /**
-   * Gera e baixa o instalador automático .bat para o Outlook Desktop
+   * Converte a imagem do logo para Base64
    */
-  function generateDesktopInstaller() {
-    const data = getFormData();
-    
-    const rawHtml = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-</head>
-<body style="margin:0; padding:0;">
-${buildSignatureHTML(data)}
-</body>
-</html>`;
+  async function getLogoBase64() {
+    try {
+      const response = await fetch('logomarca/atrio.png');
+      const blob = await response.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const res = reader.result;
+          resolve(res.split(',')[1]);
+        };
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      return '';
+    }
+  }
 
+  /**
+   * Gera e baixa o instalador automático .bat para o Outlook Desktop com suporte completo a RTF, HTM e imagens
+   */
+  async function generateDesktopInstaller() {
+    const data = getFormData();
+    const logoBase64 = await getLogoBase64();
+
+    // HTML formatado para o arquivo .htm do Outlook Desktop
+    const rawHtml = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Atrio Hotel Management</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+</HEAD>
+<BODY style="margin:0; padding:0;">
+${buildSignatureHTML(data, true)}
+</BODY></HTML>`;
+
+    // Plain text format
     const plainText = `${data.nome || 'NOME COMPLETO'}
-${data.cargo || ''} - ${data.setor || ''}
+${data.cargo || ''} ${data.setor ? '• ' + data.setor : ''}
 Microsoft Teams: ${data.email || ''}
 ${data.telefone || ''}
 ATRIOHOTEIS.COM.BR`;
 
+    // RTF format (necessário para o diálogo de seleção de assinaturas padrão do Outlook)
+    const cargoSetorText = data.cargo && data.setor ? `${data.cargo} \\bullet  ${data.setor}` : (data.cargo || data.setor || '');
+    const rtfContent = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1046{\\fonttbl{\\f0\\fnil\\fcharset0 Segoe UI;}{\\f1\\fnil\\fcharset0 Arial;}}
+{\\colortbl ;\\red219\\green155\\blue14;\\red30\\green34\\blue41;\\red71\\green85\\blue105;}
+{\\*\\generator AtrioSignatureGenerator;}
+\\viewkind4\\uc1 
+\\pard\\sa100\\sl240\\slmult1\\b\\f0\\fs22\\cf2 ${data.nome || 'NOME COMPLETO'}\\b0\\par
+\\b\\fs18\\cf1 ${cargoSetorText}\\b0\\par
+\\fs16\\cf3 Microsoft Teams:\\par
+${data.email || ''}\\par
+${data.telefone || ''}\\par
+\\b\\fs18\\cf1 ATRIOHOTEIS.COM.BR\\b0\\par
+}`;
+
     const base64Html = btoa(unescape(encodeURIComponent(rawHtml)));
     const base64Txt = btoa(unescape(encodeURIComponent(plainText)));
+    const base64Rtf = btoa(unescape(encodeURIComponent(rtfContent)));
 
     const batContent = `@echo off
 chcp 65001 >nul
@@ -223,24 +262,39 @@ echo ============================================================
 echo   INSTALADOR DE ASSINATURA - ATRIO HOTEL MANAGEMENT
 echo ============================================================
 echo.
-echo [1/3] Preparando pasta de assinaturas do Outlook...
+echo [1/4] Criando pastas oficiais de assinatura do Outlook...
 set "SIG_DIR=%APPDATA%\\Microsoft\\Signatures"
-if not exist "%SIG_DIR%" mkdir "%SIG_DIR%"
+set "FILES_DIR_1=%SIG_DIR%\\Atrio Hotel Management_arquivos"
+set "FILES_DIR_2=%SIG_DIR%\\Atrio Hotel Management_files"
 
-echo [2/3] Gravando arquivos da assinatura...
+if not exist "%SIG_DIR%" mkdir "%SIG_DIR%"
+if not exist "%FILES_DIR_1%" mkdir "%FILES_DIR_1%"
+if not exist "%FILES_DIR_2%" mkdir "%FILES_DIR_2%"
+
+echo [2/4] Gravando imagem da logomarca oficial...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllBytes('%FILES_DIR_1%\\image001.png', [System.Convert]::FromBase64String('${logoBase64}'))"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllBytes('%FILES_DIR_2%\\image001.png', [System.Convert]::FromBase64String('${logoBase64}'))"
+
+echo [3/4] Gravando arquivos de assinatura (HTM, RTF, TXT)...
 powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Atrio Hotel Management.htm', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Html}')), [System.Text.Encoding]::UTF8)"
 powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Atrio Hotel Management.txt', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Txt}')), [System.Text.Encoding]::UTF8)"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Atrio Hotel Management.rtf', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Rtf}')), [System.Text.Encoding]::UTF8)"
 
-echo [3/3] Configurando assinatura padrao no Outlook...
+echo [4/4] Definindo 'Atrio Hotel Management' como assinatura padrao no Outlook...
 reg add "HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings" /v "NewSignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
 reg add "HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings" /v "ReplySignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
+reg add "HKCU\\Software\\Microsoft\\Office\\15.0\\Common\\MailSettings" /v "NewSignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
+reg add "HKCU\\Software\\Microsoft\\Office\\15.0\\Common\\MailSettings" /v "ReplySignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-ChildItem 'HKCU:\\Software\\Microsoft\\Office\\16.0\\Outlook\\Profiles' -Recurse -ErrorAction SilentlyContinue | ForEach-Object { if ($_.Property -contains 'NewSignature' -or $_.Property -contains '001f6600') { Set-ItemProperty -Path $_.PSPath -Name 'NewSignature' -Value 'Atrio Hotel Management' -ErrorAction SilentlyContinue; Set-ItemProperty -Path $_.PSPath -Name 'ReplySignature' -Value 'Atrio Hotel Management' -ErrorAction SilentlyContinue } }" >nul 2>&1
 
 echo.
 echo ============================================================
 echo   SUCESSO! Assinatura 'Atrio Hotel Management' instalada!
 echo ============================================================
 echo.
-echo Abra ou reinicie o aplicativo Outlook Desktop para utilizar.
+echo A assinatura e a imagem foram configuradas com sucesso.
+echo Abra ou reinicie o Outlook para utilizar.
 echo.
 pause
 `;
