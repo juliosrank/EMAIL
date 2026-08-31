@@ -62,22 +62,48 @@
   }
 
   /**
-   * Renderiza a assinatura no Canvas em 2x (Retina / Alta Resolução)
+   * Renderiza a assinatura no Canvas em 2x (Retina / Alta Resolução) com fundo transparente e largura dinâmica
    */
   function renderSignature() {
     if (!signatureCanvas) return;
     const ctx = signatureCanvas.getContext('2d');
     const data = getFormData();
 
-    // Resolução física 2x para nitidez máxima (920 x 260)
-    const W = 920;
+    const nomeText = data.nome ? data.nome.trim().toUpperCase() : 'NOME SOBRENOME';
+    const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
+    const telText = data.telefone ? data.telefone.trim() : '(00) 0000-0000';
+
+    // Medição de largura dos textos para evitar qualquer corte
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+
+    const nomeFontSize = 34;
+    tempCtx.font = `700 ${nomeFontSize}px Montserrat, Arial, sans-serif`;
+    const nomeWidth = tempCtx.measureText(nomeText).width;
+
+    const cargoFontSize = 24;
+    tempCtx.font = `500 ${cargoFontSize}px Montserrat, Arial, sans-serif`;
+    const cargoWidth = tempCtx.measureText(cargoText).width;
+
+    tempCtx.font = '500 22px Montserrat, Arial, sans-serif';
+    const telWidth = tempCtx.measureText(telText).width + 50;
+    const siteWidth = tempCtx.measureText('atriohoteis.com.br').width + 50;
+
+    const maxContentRight = Math.max(nomeWidth, cargoWidth, telWidth, siteWidth);
+
+    // Largura dinâmica (mínimo 920px em 2x = 460px em 1x)
+    const rightPadding = 35;
+    const minW = 920;
+    const W = Math.max(minW, 415 + Math.round(maxContentRight) + rightPadding);
     const H = 260;
+
     signatureCanvas.width = W;
     signatureCanvas.height = H;
+    signatureCanvas.style.width = (W / 2) + 'px';
+    signatureCanvas.style.height = (H / 2) + 'px';
 
-    // 1. Fundo Branco
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, W, H);
+    // 1. Fundo Transparente (Compatibilidade perfeita com Modo Escuro / Dark Mode)
+    ctx.clearRect(0, 0, W, H);
 
     // 2. Logomarca Atrio (Coluna Esquerda)
     if (assets.logo.complete && assets.logo.naturalWidth > 0) {
@@ -93,14 +119,12 @@
     ctx.fillRect(380, 24, 4, 192);
 
     // 4. Nome Completo (Negrito, Caixa Alta)
-    const nomeText = data.nome ? data.nome.trim().toUpperCase() : 'NOME SOBRENOME';
     ctx.fillStyle = data.nome ? '#000000' : '#94a3b8';
     ctx.font = '700 34px Montserrat, Arial, sans-serif';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText(nomeText, 415, 62);
 
     // 5. Cargo (Title Case / Dourado)
-    const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
     ctx.fillStyle = data.cargo ? '#DB9B0E' : '#94a3b8';
     ctx.font = '500 24px Montserrat, Arial, sans-serif';
     ctx.fillText(cargoText, 415, 104);
@@ -109,7 +133,6 @@
     if (assets.phone.complete && assets.phone.naturalWidth > 0) {
       ctx.drawImage(assets.phone, 415, 126, 32, 32);
     }
-    const telText = data.telefone ? data.telefone.trim() : '(00) 0000-0000';
     ctx.fillStyle = data.telefone ? '#000000' : '#94a3b8';
     ctx.font = '500 22px Montserrat, Arial, sans-serif';
     ctx.fillText(telText, 458, 150);
@@ -122,7 +145,7 @@
     ctx.font = '500 22px Montserrat, Arial, sans-serif';
     ctx.fillText('atriohoteis.com.br', 458, 196);
 
-    // 8. Barra Gradiente Inferior
+    // 8. Barra Gradiente Inferior (Estende por toda a largura W)
     if (assets.grad.complete && assets.grad.naturalWidth > 0) {
       ctx.drawImage(assets.grad, 0, 240, W, 20);
     } else {
@@ -139,9 +162,11 @@
 
     try {
       const dataUrl = signatureCanvas.toDataURL('image/png');
-      
-      // HTML com a imagem linkada para atriohoteis.com.br
-      const htmlContent = `<a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:inline-block; outline:none; border:none;"><img src="${dataUrl}" alt="Atrio Hotel Management" width="460" height="130" style="display:block; width:460px; height:130px; border:0; outline:none;" border="0"></a>`;
+      const displayW = Math.round(signatureCanvas.width / 2);
+      const displayH = Math.round(signatureCanvas.height / 2);
+
+      // HTML com a imagem transparente linkada para atriohoteis.com.br
+      const htmlContent = `<a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:inline-block; outline:none; border:none;"><img src="${dataUrl}" alt="Atrio Hotel Management" width="${displayW}" height="${displayH}" style="display:block; width:${displayW}px; height:${displayH}px; border:0; outline:none;" border="0"></a>`;
       
       signatureCanvas.toBlob(async (blob) => {
         let success = false;
@@ -229,12 +254,15 @@
     const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
     const telefoneText = data.telefone ? data.telefone.trim() : '';
 
+    const displayW = Math.round(signatureCanvas.width / 2);
+    const displayH = Math.round(signatureCanvas.height / 2);
+
     const rawHtml = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML><HEAD><TITLE>Atrio Hotel Management</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
 </HEAD>
 <BODY style="margin:0; padding:0;">
-<a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:inline-block; border:0;"><img src="Atrio Hotel Management_arquivos/signature.png" alt="Atrio Hotel Management" width="460" height="130" style="display:block; width:460px; height:130px; border:0; outline:none;" border="0"></a>
+<a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:inline-block; border:0;"><img src="Atrio Hotel Management_arquivos/signature.png" alt="Atrio Hotel Management" width="${displayW}" height="${displayH}" style="display:block; width:${displayW}px; height:${displayH}px; border:0; outline:none;" border="0"></a>
 </BODY></HTML>`;
 
     const plainText = `${nomeText}
