@@ -14,7 +14,7 @@ https://www.linkedin.com/in/juliosrank/ -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=2.0.4">
+  <link rel="stylesheet" href="style.css?v=2.0.5">
 </head>
 <body>
   <div class="app-layout">
@@ -24,7 +24,7 @@ https://www.linkedin.com/in/juliosrank/ -->
         <div class="header-brand">
           <img src="logomarca/atrio.png" alt="Atrio Hotel Management" class="header-logo">
           <h1 class="app-title">Gerador de Assinatura de E-mail</h1>
-          <span style="font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 9999px; font-weight: 600;">v2.0.4</span>
+          <span style="font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 9999px; font-weight: 600;">v2.0.5</span>
         </div>
         <button type="button" id="btn-help" class="btn-help">Como Configurar</button>
       </div>
@@ -70,7 +70,7 @@ https://www.linkedin.com/in/juliosrank/ -->
           <div class="preview-canvas">
             <div class="signature-stage">
               <div id="signature-output" class="signature-output">
-                <!-- Assinatura renderizada em HTML dinâmico -->
+                <canvas id="signature-canvas" width="920" height="260" style="display: block; max-width: 100%; height: auto;"></canvas>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@ https://www.linkedin.com/in/juliosrank/ -->
   <div class="toast-container" id="toast-container"></div>
 
   <!-- Scripts -->
-  <script src="js/formatarTelefone.js?v=2.0.4"></script>
-  <script src="js/assinatura.js?v=2.0.4"></script>
+  <script src="js/formatarTelefone.js?v=2.0.5"></script>
+  <script src="js/assinatura.js?v=2.0.5"></script>
 </body>
 </html>
