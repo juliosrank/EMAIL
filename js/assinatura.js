@@ -116,8 +116,8 @@
           <table cellpadding="0" cellspacing="0" width="100%" style="width: 100%; border-collapse: collapse;">
             <tbody>
               <tr>
-                <td height="6" style="height: 6px; font-size: 1px; line-height: 1px; background: linear-gradient(90deg, #C27F0C 0%, #EBB426 50%, #D89710 100%); background-color: #DB9B0E; border-radius: 2px;">
-                  <img data-imagetype="External" src="${gradientSrc}" alt="" width="100%" height="6" style="display:block; width:100%; height:6px; max-height:6px; border:none; outline:none; border-radius: 2px;">
+                <td height="10" style="height: 10px; font-size: 1px; line-height: 1px; background-color: #DB9B0E;">
+                  <img data-imagetype="External" src="${gradientSrc}" alt="" width="100%" height="10" style="display:block; width:100%; height:10px; max-height:10px; border:none; outline:none;">
                 </td>
               </tr>
             </tbody>
