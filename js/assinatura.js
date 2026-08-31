@@ -33,17 +33,23 @@
   /**
    * Constrói o HTML da assinatura para a Web e Área de Transferência
    */
-  function buildSignatureHTML(data, isForDesktopFile = false) {
-    const nome = escapeHtml(data.nome) || '<span style="color:#94a3b8">NOME COMPLETO</span>';
+  /**
+   * Constrói o HTML da assinatura para a Web e Área de Transferência
+   */
+  function buildSignatureHTML(data) {
+    const nomeText = data.nome ? data.nome.trim().toUpperCase() : '';
+    const nome = nomeText ? escapeHtml(nomeText) : '<span style="color:#94a3b8">NOME COMPLETO</span>';
     
-    // Cargo e Setor
+    // Cargo e Setor em maiúsculas
+    const cargoText = data.cargo ? data.cargo.trim().toUpperCase() : '';
+    const setorText = data.setor ? data.setor.trim().toUpperCase() : '';
     let cargoSetor = '';
-    if (data.cargo && data.setor) {
-      cargoSetor = `${escapeHtml(data.cargo)} • ${escapeHtml(data.setor)}`;
-    } else if (data.cargo) {
-      cargoSetor = escapeHtml(data.cargo);
-    } else if (data.setor) {
-      cargoSetor = escapeHtml(data.setor);
+    if (cargoText && setorText) {
+      cargoSetor = `${escapeHtml(cargoText)} • ${escapeHtml(setorText)}`;
+    } else if (cargoText) {
+      cargoSetor = escapeHtml(cargoText);
+    } else if (setorText) {
+      cargoSetor = escapeHtml(setorText);
     } else {
       cargoSetor = '<span style="color:#94a3b8">CARGO / SETOR</span>';
     }
@@ -57,8 +63,8 @@
       ? `<p style="margin:2px 0px 0px 0px; font-family:'Inter', Arial, sans-serif; font-size:11px; color:#475569; line-height:16px;">${escapeHtml(data.telefone)}</p>`
       : '';
 
-    // No desktop do Outlook, a imagem fica na pasta _arquivos da assinatura
-    const logoSrc = isForDesktopFile ? 'Atrio Hotel Management_arquivos/image001.png' : 'logomarca/atrio.png';
+    // URL pública absoluta da imagem para funcionar em qualquer cliente (Outlook Web, Desktop, mobile, etc.)
+    const logoSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/atrio.png';
 
     return `
 <div id="x_Signature">
@@ -228,24 +234,29 @@
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
 </HEAD>
 <BODY style="margin:0; padding:0;">
-${buildSignatureHTML(data, true)}
+${buildSignatureHTML(data)}
 </BODY></HTML>`;
 
+    const nomeText = data.nome ? data.nome.trim().toUpperCase() : 'NOME COMPLETO';
+    const cargoText = data.cargo ? data.cargo.trim().toUpperCase() : '';
+    const setorText = data.setor ? data.setor.trim().toUpperCase() : '';
+    const cargoSetorRaw = cargoText && setorText ? `${cargoText} • ${setorText}` : (cargoText || setorText || '');
+
     // Plain text format
-    const plainText = `${data.nome || 'NOME COMPLETO'}
-${data.cargo || ''} ${data.setor ? '• ' + data.setor : ''}
+    const plainText = `${nomeText}
+${cargoSetorRaw}
 Microsoft Teams: ${data.email || ''}
 ${data.telefone || ''}
 ATRIOHOTEIS.COM.BR`;
 
     // RTF format (necessário para o diálogo de seleção de assinaturas padrão do Outlook)
-    const cargoSetorText = data.cargo && data.setor ? `${data.cargo} \\bullet  ${data.setor}` : (data.cargo || data.setor || '');
+    const cargoSetorRtf = cargoText && setorText ? `${cargoText} \\bullet  ${setorText}` : cargoSetorRaw;
     const rtfContent = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1046{\\fonttbl{\\f0\\fnil\\fcharset0 Segoe UI;}{\\f1\\fnil\\fcharset0 Arial;}}
 {\\colortbl ;\\red219\\green155\\blue14;\\red30\\green34\\blue41;\\red71\\green85\\blue105;}
 {\\*\\generator AtrioSignatureGenerator;}
 \\viewkind4\\uc1 
-\\pard\\sa100\\sl240\\slmult1\\b\\f0\\fs22\\cf2 ${data.nome || 'NOME COMPLETO'}\\b0\\par
-\\b\\fs18\\cf1 ${cargoSetorText}\\b0\\par
+\\pard\\sa100\\sl240\\slmult1\\b\\f0\\fs22\\cf2 ${nomeText}\\b0\\par
+\\b\\fs18\\cf1 ${cargoSetorRtf}\\b0\\par
 \\fs16\\cf3 Microsoft Teams:\\par
 ${data.email || ''}\\par
 ${data.telefone || ''}\\par
