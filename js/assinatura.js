@@ -10,8 +10,6 @@
   // Elementos do DOM
   const inputNome = document.getElementById('nome');
   const inputCargo = document.getElementById('cargo');
-  const inputSetor = document.getElementById('setor');
-  const inputEmail = document.getElementById('email');
   const inputTelefone = document.getElementById('telefone');
 
   const signatureOutput = document.getElementById('signature-output');
@@ -33,74 +31,78 @@
   /**
    * Constrói o HTML da assinatura para a Web e Área de Transferência
    */
-  /**
-   * Constrói o HTML da assinatura para a Web e Área de Transferência
-   */
   function buildSignatureHTML(data) {
     const nomeText = data.nome ? data.nome.trim().toUpperCase() : '';
-    const nome = nomeText ? escapeHtml(nomeText) : '<span style="color:#94a3b8">NOME COMPLETO</span>';
+    const nome = nomeText ? escapeHtml(nomeText) : '<span style="color:#94a3b8">GABRIEL FUMAGALLI</span>';
     
-    // Cargo e Setor em maiúsculas
-    const cargoText = data.cargo ? data.cargo.trim().toUpperCase() : '';
-    const setorText = data.setor ? data.setor.trim().toUpperCase() : '';
-    let cargoSetor = '';
-    if (cargoText && setorText) {
-      cargoSetor = `${escapeHtml(cargoText)} • ${escapeHtml(setorText)}`;
-    } else if (cargoText) {
-      cargoSetor = escapeHtml(cargoText);
-    } else if (setorText) {
-      cargoSetor = escapeHtml(setorText);
-    } else {
-      cargoSetor = '<span style="color:#94a3b8">CARGO / SETOR</span>';
-    }
+    // Cargo (Title Case / Mantém a capitalização digitada pelo usuário)
+    const cargo = data.cargo ? escapeHtml(data.cargo.trim()) : '<span style="color:#94a3b8">Diretor de Marketing</span>';
 
-    const email = escapeHtml(data.email) || '<span style="color:#94a3b8">email@atriohoteis.com.br</span>';
-    const emailLink = data.email 
-      ? `<a href="mailto:${escapeHtml(data.email)}" style="color:#475569; text-decoration:none;">${escapeHtml(data.email)}</a>` 
-      : email;
-
-    const telefoneHTML = data.telefone
-      ? `<p style="margin:2px 0px 0px 0px; font-family:'Inter', Arial, sans-serif; font-size:11px; color:#475569; line-height:16px;">${escapeHtml(data.telefone)}</p>`
-      : '';
-
-    // URL pública absoluta da imagem para funcionar em qualquer cliente (Outlook Web, Desktop, mobile, etc.)
+    // URLs das imagens públicas (GitHub raw para compatibilidade universal)
     const logoSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/atrio.png';
+    const iconPhoneSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/telefone.png';
+    const iconSiteSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/site.png';
+
+    const telefoneFormatted = data.telefone ? escapeHtml(data.telefone.trim()) : '<span style="color:#94a3b8">(11) 5542-4853</span>';
+    const telefoneDigits = data.telefone ? data.telefone.replace(/\D/g, '') : '1155424853';
+    const telefoneColor = data.telefone ? '#000000' : '#94a3b8';
 
     return `
 <div id="x_Signature">
-  <table style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-align: start; border-collapse: collapse; border-spacing: 0px; background-color: #ffffff; width: auto;" cellpadding="0" cellspacing="0">
+  <table style="font-family: 'Montserrat', 'Century Gothic', Arial, sans-serif; font-size: 12px; text-align: start; border-collapse: collapse; border-spacing: 0px; background-color: #ffffff; width: auto;" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <!-- Coluna da Logomarca -->
-        <td valign="middle" align="center" style="padding: 10px 24px 10px 0px; border-right: 1.5px solid #cbd5e1; width: 200px;">
+        <td valign="middle" align="center" style="padding: 10px 24px 10px 0px; border-right: 2px solid #DB9B0E; width: 180px;">
           <a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:block;">
-            <img data-imagetype="External" src="${logoSrc}" alt="Atrio Hotel Management" width="200" height="39" style="display:block; outline:none; border:none; width:200px; height:39px; max-width:200px;">
+            <img data-imagetype="External" src="${logoSrc}" alt="Atrio Hotel Management" width="180" height="35" style="display:block; outline:none; border:none; width:180px; height:auto; max-width:180px;">
           </a>
         </td>
 
         <!-- Coluna de Dados -->
-        <td valign="middle" align="left" style="padding: 8px 0px 8px 24px;">
+        <td valign="middle" align="left" style="padding: 6px 0px 6px 24px;">
           <table cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
             <tbody>
               <tr>
                 <td style="padding: 0px 0px 2px 0px;">
-                  <h1 style="margin:0px; font-family:'Inter', Arial, sans-serif; font-size:18px; font-weight:700; color:#1e2229; letter-spacing:1.5px; text-transform:uppercase; line-height:22px;">${nome}</h1>
+                  <h1 style="margin:0px; font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:18px; font-weight:700; color:#000000; letter-spacing:1px; text-transform:uppercase; line-height:22px;">${nome}</h1>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 0px 0px 12px 0px;">
-                  <p style="margin:0px; font-family:'Inter', Arial, sans-serif; font-size:12px; font-weight:600; color:#DB9B0E; letter-spacing:1.5px; text-transform:uppercase; line-height:16px;">${cargoSetor}</p>
+                <td style="padding: 0px 0px 10px 0px;">
+                  <p style="margin:0px; font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:13px; font-weight:500; color:#DB9B0E; line-height:16px;">${cargo}</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 0px 0px 8px 0px;">
-                  <p style="margin:0px; font-family:'Inter', Arial, sans-serif; font-size:11px; color:#475569; line-height:16px;">Microsoft Teams:<br>${emailLink}</p>
-                  ${telefoneHTML}
+                <td style="padding: 0px 0px 4px 0px;">
+                  <table cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                    <tbody>
+                      <tr>
+                        <td valign="middle" style="padding: 0px 8px 0px 0px; width: 16px;">
+                          <img data-imagetype="External" src="${iconPhoneSrc}" alt="Telefone" width="16" height="16" style="display:block; width:16px; height:16px; border:none; outline:none;">
+                        </td>
+                        <td valign="middle" style="padding: 0px;">
+                          <a href="tel:${telefoneDigits}" style="font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:12px; font-weight:500; color:${telefoneColor}; text-decoration:none; line-height:16px;">${telefoneFormatted}</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 4px 0px 0px 0px;">
-                  <p style="margin:0px; font-family:'Inter', Arial, sans-serif; font-size:12px; font-weight:700; color:#DB9B0E; letter-spacing:3.5px; text-transform:uppercase; line-height:16px;"><a href="https://atriohoteis.com.br" target="_blank" style="color:#DB9B0E; text-decoration:none;">ATRIOHOTEIS.COM.BR</a></p>
+                <td style="padding: 0px;">
+                  <table cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                    <tbody>
+                      <tr>
+                        <td valign="middle" style="padding: 0px 8px 0px 0px; width: 16px;">
+                          <img data-imagetype="External" src="${iconSiteSrc}" alt="Website" width="16" height="16" style="display:block; width:16px; height:16px; border:none; outline:none;">
+                        </td>
+                        <td valign="middle" style="padding: 0px;">
+                          <a href="https://atriohoteis.com.br" target="_blank" style="font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:12px; font-weight:500; color:#000000; text-decoration:none; line-height:16px;">atriohoteis.com.br</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </td>
               </tr>
             </tbody>
@@ -127,17 +129,15 @@
 
   function getFormData() {
     return {
-      nome: inputNome.value.trim(),
-      cargo: inputCargo.value.trim(),
-      setor: inputSetor.value.trim(),
-      email: inputEmail.value.trim(),
-      telefone: inputTelefone.value.trim()
+      nome: inputNome ? inputNome.value.trim() : '',
+      cargo: inputCargo ? inputCargo.value.trim() : '',
+      telefone: inputTelefone ? inputTelefone.value.trim() : ''
     };
   }
 
   function renderSignature() {
     const data = getFormData();
-    signatureOutput.innerHTML = buildSignatureHTML(data, false);
+    signatureOutput.innerHTML = buildSignatureHTML(data);
   }
 
   /**
@@ -200,11 +200,11 @@
   }
 
   /**
-   * Converte a imagem do logo para Base64
+   * Converte uma imagem para Base64
    */
-  async function getLogoBase64() {
+  async function getImageBase64(path) {
     try {
-      const response = await fetch('logomarca/atrio.png');
+      const response = await fetch(path);
       const blob = await response.blob();
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -221,12 +221,12 @@
 
   /**
    * Gera e baixa o instalador automático .bat para o Outlook Desktop com suporte completo a RTF, HTM e imagens.
-   * Usa abordagem de script PowerShell temporário para evitar limite de 8191 caracteres do cmd.exe.
-   * Detecta automaticamente pastas de assinatura locais e do OneDrive.
    */
   async function generateDesktopInstaller() {
     const data = getFormData();
-    const logoBase64 = await getLogoBase64();
+    const logoBase64 = await getImageBase64('logomarca/atrio.png');
+    const phoneBase64 = await getImageBase64('logomarca/telefone.png');
+    const siteBase64 = await getImageBase64('logomarca/site.png');
 
     // HTML formatado para o arquivo .htm do Outlook Desktop
     const rawHtml = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -238,29 +238,24 @@ ${buildSignatureHTML(data)}
 </BODY></HTML>`;
 
     const nomeText = data.nome ? data.nome.trim().toUpperCase() : 'NOME COMPLETO';
-    const cargoText = data.cargo ? data.cargo.trim().toUpperCase() : '';
-    const setorText = data.setor ? data.setor.trim().toUpperCase() : '';
-    const cargoSetorRaw = cargoText && setorText ? `${cargoText} • ${setorText}` : (cargoText || setorText || '');
+    const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
+    const telefoneText = data.telefone ? data.telefone.trim() : '';
 
     // Plain text format
     const plainText = `${nomeText}
-${cargoSetorRaw}
-Microsoft Teams: ${data.email || ''}
-${data.telefone || ''}
-ATRIOHOTEIS.COM.BR`;
+${cargoText}
+${telefoneText}
+atriohoteis.com.br`;
 
     // RTF format (necessário para o diálogo de seleção de assinaturas padrão do Outlook)
-    const cargoSetorRtf = cargoText && setorText ? `${cargoText} \\bullet  ${setorText}` : cargoSetorRaw;
-    const rtfContent = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1046{\\fonttbl{\\f0\\fnil\\fcharset0 Segoe UI;}{\\f1\\fnil\\fcharset0 Arial;}}
-{\\colortbl ;\\red219\\green155\\blue14;\\red30\\green34\\blue41;\\red71\\green85\\blue105;}
+    const rtfContent = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1046{\\fonttbl{\\f0\\fnil\\fcharset0 Montserrat;}{\\f1\\fnil\\fcharset0 Segoe UI;}{\\f2\\fnil\\fcharset0 Arial;}}
+{\\colortbl ;\\red219\\green155\\blue14;\\red0\\green0\\blue0;}
 {\\*\\generator AtrioSignatureGenerator;}
 \\viewkind4\\uc1 
-\\pard\\sa100\\sl240\\slmult1\\b\\f0\\fs22\\cf2 ${nomeText}\\b0\\par
-\\b\\fs18\\cf1 ${cargoSetorRtf}\\b0\\par
-\\fs16\\cf3 Microsoft Teams:\\par
-${data.email || ''}\\par
-${data.telefone || ''}\\par
-\\b\\fs18\\cf1 ATRIOHOTEIS.COM.BR\\b0\\par
+\\pard\\sa60\\sl240\\slmult1\\b\\f0\\fs22\\cf2 ${nomeText}\\b0\\par
+\\f0\\fs18\\cf1 ${cargoText}\\par
+\\fs16\\cf2 ${telefoneText}\\par
+\\fs16\\cf2 atriohoteis.com.br\\par
 }`;
 
     const base64Html = btoa(unescape(encodeURIComponent(rawHtml)));
@@ -277,6 +272,8 @@ $instalados = @()
 
 # --- Dados Base64 embutidos ---
 $logoB64 = '${logoBase64}'
+$phoneB64 = '${phoneBase64}'
+$siteB64 = '${siteBase64}'
 $htmB64 = '${base64Html}'
 $txtB64 = '${base64Txt}'
 $rtfB64 = '${base64Rtf}'
@@ -292,7 +289,6 @@ $sigPaths += $localSig
 $oneDrivePaths = @($env:OneDrive, $env:OneDriveCommercial, $env:OneDriveConsumer)
 foreach ($od in $oneDrivePaths) {
     if ($od -and (Test-Path $od)) {
-        # Procurar pasta Signatures dentro do OneDrive
         $odSig = Get-ChildItem -Path $od -Filter 'Signatures' -Directory -Recurse -Depth 3 -ErrorAction SilentlyContinue |
                  Where-Object { $_.FullName -match 'Microsoft' } |
                  Select-Object -First 1
@@ -325,10 +321,22 @@ foreach ($sigDir in $sigPaths) {
         if (-not (Test-Path $filesDir1)) { New-Item -Path $filesDir1 -ItemType Directory -Force | Out-Null }
         if (-not (Test-Path $filesDir2)) { New-Item -Path $filesDir2 -ItemType Directory -Force | Out-Null }
 
-        # Gravar logomarca
-        $logoBytes = [System.Convert]::FromBase64String($logoB64)
-        [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'image001.png'), $logoBytes)
-        [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'image001.png'), $logoBytes)
+        # Gravar logomarca e icones
+        if ($logoB64) {
+            $logoBytes = [System.Convert]::FromBase64String($logoB64)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'atrio.png'), $logoBytes)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'atrio.png'), $logoBytes)
+        }
+        if ($phoneB64) {
+            $phoneBytes = [System.Convert]::FromBase64String($phoneB64)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'telefone.png'), $phoneBytes)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'telefone.png'), $phoneBytes)
+        }
+        if ($siteB64) {
+            $siteBytes = [System.Convert]::FromBase64String($siteB64)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'site.png'), $siteBytes)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'site.png'), $siteBytes)
+        }
 
         # Gravar HTM
         $htmText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($htmB64))
@@ -400,7 +408,6 @@ Write-Host ''
 `.trim().replace(/\r?\n/g, '\r\n');
 
     const ps1Bytes = new TextEncoder().encode(ps1Content);
-    // Converter bytes para base64 de forma segura (sem spread operator que pode causar stack overflow)
     let binaryStr = '';
     for (let i = 0; i < ps1Bytes.length; i++) {
       binaryStr += String.fromCharCode(ps1Bytes[i]);
@@ -410,7 +417,6 @@ Write-Host ''
     for (let i = 0; i < ps1Base64.length; i += 76) {
       ps1Base64Lines.push(ps1Base64.substring(i, i + 76));
     }
-    // Gerar as linhas de echo antes do template literal para evitar backticks aninhados
     const echoLines = ps1Base64Lines.map(function(line) { return 'echo ' + line; }).join('\n');
 
     const batFinal = `@echo off
@@ -469,14 +475,12 @@ pause >nul
   }
 
   function clearForm() {
-    inputNome.value = '';
-    inputCargo.value = '';
-    inputSetor.value = '';
-    inputEmail.value = '';
-    inputTelefone.value = '';
+    if (inputNome) inputNome.value = '';
+    if (inputCargo) inputCargo.value = '';
+    if (inputTelefone) inputTelefone.value = '';
     renderSignature();
     showToast('Formulário limpo.');
-    inputNome.focus();
+    if (inputNome) inputNome.focus();
   }
 
   function showToast(message) {
@@ -519,7 +523,7 @@ pause >nul
   }
 
   function setupEvents() {
-    const inputs = [inputNome, inputCargo, inputSetor, inputEmail, inputTelefone];
+    const inputs = [inputNome, inputCargo, inputTelefone];
     inputs.forEach(input => {
       if (input) {
         ['input', 'change', 'keyup', 'paste'].forEach(evt => {
@@ -569,3 +573,4 @@ pause >nul
   }
 
 })();
+
