@@ -157,43 +157,97 @@
   async function copySignatureToClipboard() {
     if (!signatureCanvas) return;
 
-    try {
-      signatureCanvas.toBlob(async (blob) => {
-        let copied = false;
+    btnCopySignature.classList.add('copied');
+    btnCopyText.textContent = 'Copiando...';
 
-        // Método primário: Escrever a imagem nativa PNG diretamente na Área de Transferência
-        if (navigator.clipboard && window.ClipboardItem) {
+    try {
+      const dataUrl = signatureCanvas.toDataURL('image/png');
+      const displayW = Math.round(signatureCanvas.width / 2);
+      const displayH = Math.round(signatureCanvas.height / 2);
+      const htmlContent = `<img src="${dataUrl}" alt="Atrio Hotel Management" width="${displayW}" height="${displayH}" style="display:block; width:${displayW}px; height:${displayH}px; border:0; outline:none;" border="0">`;
+
+      let copied = false;
+
+      // Método 1: Clipboard API com Promise síncrona para preservar permissão de gesto do usuário
+      if (navigator.clipboard && window.ClipboardItem) {
+        try {
+          const blobPromise = new Promise((resolve, reject) => {
+            signatureCanvas.toBlob(blob => {
+              if (blob) resolve(blob);
+              else reject(new Error('Canvas toBlob failed'));
+            }, 'image/png');
+          });
+
+          const htmlBlob = new Blob([htmlContent], { type: 'text/html' });
+
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'image/png': blobPromise,
+              'text/html': htmlBlob
+            })
+          ]);
+          copied = true;
+        } catch (err1) {
+          console.warn('Falha no método combinado, tentando somente image/png:', err1);
           try {
+            const blobPromise2 = new Promise((resolve, reject) => {
+              signatureCanvas.toBlob(blob => {
+                if (blob) resolve(blob);
+                else reject(new Error('Canvas toBlob failed'));
+              }, 'image/png');
+            });
             await navigator.clipboard.write([
               new ClipboardItem({
-                'image/png': blob
+                'image/png': blobPromise2
               })
             ]);
             copied = true;
-          } catch (err) {
-            console.warn('Erro ao copiar imagem/png direta:', err);
+          } catch (err2) {
+            console.warn('ClipboardItem falhou:', err2);
           }
         }
+      }
 
-        if (copied) {
-          btnCopySignature.classList.add('copied');
-          btnCopyText.textContent = 'Imagem Copiada!';
-          showToast('Imagem PNG copiada! Cole (Ctrl+V) no Outlook.');
+      // Método 2: Fallback via elemento contenteditable e execCommand('copy')
+      if (!copied) {
+        const container = document.createElement('div');
+        container.contentEditable = 'true';
+        container.innerHTML = htmlContent;
+        container.style.position = 'fixed';
+        container.style.left = '-9999px';
+        document.body.appendChild(container);
 
-          setTimeout(() => {
-            btnCopySignature.classList.remove('copied');
-            btnCopyText.textContent = 'Copiar Assinatura';
-          }, 2500);
-        } else {
-          // Fallback: baixar imagem se a API do navegador bloquear
-          downloadSignatureImage();
-          showToast('Imagem baixada automaticamente.');
-        }
-      }, 'image/png');
+        const range = document.createRange();
+        range.selectNodeContents(container);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        copied = document.execCommand('copy');
+        document.body.removeChild(container);
+        sel.removeAllRanges();
+      }
+
+      if (copied) {
+        btnCopySignature.classList.add('copied');
+        btnCopyText.textContent = 'Assinatura Copiada!';
+        showToast('Assinatura copiada para a área de transferência! Cole (Ctrl+V) no Outlook.');
+
+        setTimeout(() => {
+          btnCopySignature.classList.remove('copied');
+          btnCopyText.textContent = 'Copiar Assinatura';
+        }, 2500);
+      } else {
+        btnCopySignature.classList.remove('copied');
+        btnCopyText.textContent = 'Copiar Assinatura';
+        showToast('Não foi possível copiar diretamente. Clique em "Baixar Imagem (.png)".');
+      }
 
     } catch (e) {
-      console.error('Erro ao copiar assinatura:', e);
-      downloadSignatureImage();
+      console.error('Erro ao copiar:', e);
+      btnCopySignature.classList.remove('copied');
+      btnCopyText.textContent = 'Copiar Assinatura';
+      showToast('Erro ao copiar. Use o botão "Baixar Imagem (.png)".');
     }
   }
 
