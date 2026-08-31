@@ -274,7 +274,7 @@ $rtfB64 = '${base64Rtf}'
 $sigPaths = @()
 
 # 1. Pasta local padrao do Outlook Desktop classico
-$localSig = Join-Path $env:APPDATA 'Microsoft\Signatures'
+$localSig = Join-Path $env:APPDATA 'Microsoft\\Signatures'
 $sigPaths += $localSig
 
 # 2. Pasta do OneDrive (Novo Outlook / Outlook 365 com roaming signatures)
@@ -344,8 +344,8 @@ Write-Host ''
 Write-Host '  Configurando como assinatura padrao no Outlook...' -ForegroundColor Yellow
 
 $regPaths = @(
-    'HKCU:\Software\Microsoft\Office\16.0\Common\MailSettings',
-    'HKCU:\Software\Microsoft\Office\15.0\Common\MailSettings'
+    'HKCU:\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings',
+    'HKCU:\\Software\\Microsoft\\Office\\15.0\\Common\\MailSettings'
 )
 foreach ($rp in $regPaths) {
     try {
@@ -357,7 +357,7 @@ foreach ($rp in $regPaths) {
 
 # Configurar nos perfis do Outlook
 try {
-    Get-ChildItem 'HKCU:\Software\Microsoft\Office\16.0\Outlook\Profiles' -Recurse -ErrorAction SilentlyContinue |
+    Get-ChildItem 'HKCU:\\Software\\Microsoft\\Office\\16.0\\Outlook\\Profiles' -Recurse -ErrorAction SilentlyContinue |
     ForEach-Object {
         if ($_.Property -contains 'NewSignature' -or $_.Property -contains '001f6600') {
             Set-ItemProperty -Path $_.PSPath -Name 'NewSignature' -Value $sigName -ErrorAction SilentlyContinue
@@ -399,6 +399,8 @@ Write-Host ''
     for (let i = 0; i < ps1Base64.length; i += 76) {
       ps1Base64Lines.push(ps1Base64.substring(i, i + 76));
     }
+    // Gerar as linhas de echo antes do template literal para evitar backticks aninhados
+    const echoLines = ps1Base64Lines.map(function(line) { return 'echo ' + line; }).join('\n');
 
     const batFinal = `@echo off
 chcp 65001 >nul
@@ -411,12 +413,12 @@ echo.
 echo   Preparando instalacao, aguarde...
 echo.
 
-set "PS_B64=%TEMP%\atrio_sig.b64"
-set "PS_SCRIPT=%TEMP%\atrio_sig_install.ps1"
+set "PS_B64=%TEMP%\\atrio_sig.b64"
+set "PS_SCRIPT=%TEMP%\\atrio_sig_install.ps1"
 
 (
 echo -----BEGIN CERTIFICATE-----
-${ps1Base64Lines.map(line => `echo ${line}`).join('\n')}
+${echoLines}
 echo -----END CERTIFICATE-----
 ) > "%PS_B64%"
 
