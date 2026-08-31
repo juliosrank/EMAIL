@@ -33,10 +33,10 @@
    */
   function buildSignatureHTML(data) {
     const nomeText = data.nome ? data.nome.trim().toUpperCase() : '';
-    const nome = nomeText ? escapeHtml(nomeText) : '<span style="color:#94a3b8">GABRIEL FUMAGALLI</span>';
+    const nome = nomeText ? escapeHtml(nomeText) : '<span style="color:#94a3b8">NOME SOBRENOME</span>';
     
     // Cargo (Title Case / Mantém a capitalização digitada pelo usuário)
-    const cargo = data.cargo ? escapeHtml(data.cargo.trim()) : '<span style="color:#94a3b8">Diretor de Marketing</span>';
+    const cargo = data.cargo ? escapeHtml(data.cargo.trim()) : '<span style="color:#94a3b8">Cargo</span>';
 
     // URLs das imagens públicas (GitHub raw para compatibilidade universal)
     const logoSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/atrio.png';
@@ -44,8 +44,8 @@
     const iconSiteSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/site.png';
     const gradientSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/gradiente.png';
 
-    const telefoneFormatted = data.telefone ? escapeHtml(data.telefone.trim()) : '<span style="color:#94a3b8">(11) 5542-4853</span>';
-    const telefoneDigits = data.telefone ? data.telefone.replace(/\D/g, '') : '1155424853';
+    const telefoneFormatted = data.telefone ? escapeHtml(data.telefone.trim()) : '<span style="color:#94a3b8">(00) 0000-0000</span>';
+    const telefoneDigits = data.telefone ? data.telefone.replace(/\D/g, '') : '0000000000';
     const telefoneColor = data.telefone ? '#000000' : '#94a3b8';
 
     return `
@@ -75,14 +75,14 @@
                 </td>
               </tr>
               <tr>
-                <td style="padding: 0px 0px 4px 0px;">
+                <td style="padding: 0px 0px 5px 0px;">
                   <table cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
                     <tbody>
                       <tr>
-                        <td valign="middle" style="padding: 0px 8px 0px 0px; width: 16px;">
-                          <img data-imagetype="External" src="${iconPhoneSrc}" alt="Telefone" width="16" height="16" style="display:block; width:16px; height:16px; border:none; outline:none;">
+                        <td valign="middle" width="16" style="width:16px; min-width:16px; max-width:16px; padding:0px 8px 0px 0px;">
+                          <img data-imagetype="External" src="${iconPhoneSrc}" alt="Telefone" width="16" height="16" style="display:block; width:16px; min-width:16px; max-width:16px; height:16px; min-height:16px; max-height:16px; border:none; outline:none;">
                         </td>
-                        <td valign="middle" style="padding: 0px;">
+                        <td valign="middle" style="padding:0px; white-space:nowrap;">
                           <a href="tel:${telefoneDigits}" style="font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:12px; font-weight:500; color:${telefoneColor}; text-decoration:none; line-height:16px;">${telefoneFormatted}</a>
                         </td>
                       </tr>
@@ -95,10 +95,10 @@
                   <table cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
                     <tbody>
                       <tr>
-                        <td valign="middle" style="padding: 0px 8px 0px 0px; width: 16px;">
-                          <img data-imagetype="External" src="${iconSiteSrc}" alt="Website" width="16" height="16" style="display:block; width:16px; height:16px; border:none; outline:none;">
+                        <td valign="middle" width="16" style="width:16px; min-width:16px; max-width:16px; padding:0px 8px 0px 0px;">
+                          <img data-imagetype="External" src="${iconSiteSrc}" alt="Website" width="16" height="16" style="display:block; width:16px; min-width:16px; max-width:16px; height:16px; min-height:16px; max-height:16px; border:none; outline:none;">
                         </td>
-                        <td valign="middle" style="padding: 0px;">
+                        <td valign="middle" style="padding:0px; white-space:nowrap;">
                           <a href="https://atriohoteis.com.br" target="_blank" style="font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:12px; font-weight:500; color:#000000; text-decoration:none; line-height:16px;">atriohoteis.com.br</a>
                         </td>
                       </tr>
