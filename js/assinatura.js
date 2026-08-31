@@ -42,6 +42,7 @@
     const logoSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/atrio.png';
     const iconPhoneSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/telefone.png';
     const iconSiteSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/site.png';
+    const gradientSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/gradiente.png';
 
     const telefoneFormatted = data.telefone ? escapeHtml(data.telefone.trim()) : '<span style="color:#94a3b8">(11) 5542-4853</span>';
     const telefoneDigits = data.telefone ? data.telefone.replace(/\D/g, '') : '1155424853';
@@ -103,6 +104,20 @@
                       </tr>
                     </tbody>
                   </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <!-- Barra Gradiente Dourada Inferior -->
+      <tr>
+        <td colspan="2" style="padding: 12px 0px 0px 0px;">
+          <table cellpadding="0" cellspacing="0" width="100%" style="width: 100%; border-collapse: collapse;">
+            <tbody>
+              <tr>
+                <td height="6" style="height: 6px; font-size: 1px; line-height: 1px; background: linear-gradient(90deg, #C27F0C 0%, #EBB426 50%, #D89710 100%); background-color: #DB9B0E; border-radius: 2px;">
+                  <img data-imagetype="External" src="${gradientSrc}" alt="" width="100%" height="6" style="display:block; width:100%; height:6px; max-height:6px; border:none; outline:none; border-radius: 2px;">
                 </td>
               </tr>
             </tbody>
@@ -227,6 +242,7 @@
     const logoBase64 = await getImageBase64('logomarca/atrio.png');
     const phoneBase64 = await getImageBase64('logomarca/telefone.png');
     const siteBase64 = await getImageBase64('logomarca/site.png');
+    const gradientBase64 = await getImageBase64('logomarca/gradiente.png');
 
     // HTML formatado para o arquivo .htm do Outlook Desktop
     const rawHtml = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -274,6 +290,7 @@ $instalados = @()
 $logoB64 = '${logoBase64}'
 $phoneB64 = '${phoneBase64}'
 $siteB64 = '${siteBase64}'
+$gradB64 = '${gradientBase64}'
 $htmB64 = '${base64Html}'
 $txtB64 = '${base64Txt}'
 $rtfB64 = '${base64Rtf}'
@@ -336,6 +353,11 @@ foreach ($sigDir in $sigPaths) {
             $siteBytes = [System.Convert]::FromBase64String($siteB64)
             [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'site.png'), $siteBytes)
             [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'site.png'), $siteBytes)
+        }
+        if ($gradB64) {
+            $gradBytes = [System.Convert]::FromBase64String($gradB64)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'gradiente.png'), $gradBytes)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'gradiente.png'), $gradBytes)
         }
 
         # Gravar HTM
