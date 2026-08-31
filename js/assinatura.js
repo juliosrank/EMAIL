@@ -511,24 +511,30 @@ pause >nul
     const inputs = [inputNome, inputCargo, inputSetor, inputEmail, inputTelefone];
     inputs.forEach(input => {
       if (input) {
-        input.addEventListener('input', renderSignature);
+        ['input', 'change', 'keyup', 'paste'].forEach(evt => {
+          input.addEventListener(evt, () => {
+            requestAnimationFrame(renderSignature);
+          });
+        });
       }
     });
 
-    btnClearData.addEventListener('click', clearForm);
-    btnCopySignature.addEventListener('click', copySignatureToClipboard);
-    btnInstallDesktop.addEventListener('click', generateDesktopInstaller);
+    if (btnClearData) btnClearData.addEventListener('click', clearForm);
+    if (btnCopySignature) btnCopySignature.addEventListener('click', copySignatureToClipboard);
+    if (btnInstallDesktop) btnInstallDesktop.addEventListener('click', generateDesktopInstaller);
 
-    btnHelp.addEventListener('click', () => openHelpModal('tab-desktop'));
-    btnCloseModal.addEventListener('click', closeHelpModal);
-    btnModalClose.addEventListener('click', closeHelpModal);
+    if (btnHelp) btnHelp.addEventListener('click', () => openHelpModal('tab-desktop'));
+    if (btnCloseModal) btnCloseModal.addEventListener('click', closeHelpModal);
+    if (btnModalClose) btnModalClose.addEventListener('click', closeHelpModal);
 
-    helpModal.addEventListener('click', e => {
-      if (e.target === helpModal) closeHelpModal();
-    });
+    if (helpModal) {
+      helpModal.addEventListener('click', e => {
+        if (e.target === helpModal) closeHelpModal();
+      });
+    }
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && helpModal.classList.contains('active')) {
+      if (e.key === 'Escape' && helpModal && helpModal.classList.contains('active')) {
         closeHelpModal();
       }
     });
@@ -540,9 +546,15 @@ pause >nul
     });
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function init() {
     setupEvents();
     renderSignature();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
 })();
