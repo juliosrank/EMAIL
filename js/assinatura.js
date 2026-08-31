@@ -214,7 +214,9 @@
   }
 
   /**
-   * Gera e baixa o instalador automático .bat para o Outlook Desktop com suporte completo a RTF, HTM e imagens
+   * Gera e baixa o instalador automático .bat para o Outlook Desktop com suporte completo a RTF, HTM e imagens.
+   * Usa abordagem de script PowerShell temporário para evitar limite de 8191 caracteres do cmd.exe.
+   * Detecta automaticamente pastas de assinatura locais e do OneDrive.
    */
   async function generateDesktopInstaller() {
     const data = getFormData();
@@ -254,7 +256,151 @@ ${data.telefone || ''}\\par
     const base64Txt = btoa(unescape(encodeURIComponent(plainText)));
     const base64Rtf = btoa(unescape(encodeURIComponent(rtfContent)));
 
-    const batContent = `@echo off
+    // Gera um script PowerShell completo que será escrito em arquivo temporário pelo .bat
+    const ps1Content = `
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$ErrorActionPreference = 'Stop'
+$sigName = 'Atrio Hotel Management'
+$erros = @()
+$instalados = @()
+
+# --- Dados Base64 embutidos ---
+$logoB64 = '${logoBase64}'
+$htmB64 = '${base64Html}'
+$txtB64 = '${base64Txt}'
+$rtfB64 = '${base64Rtf}'
+
+# --- Detectar todas as pastas de assinatura possiveis ---
+$sigPaths = @()
+
+# 1. Pasta local padrao do Outlook Desktop classico
+$localSig = Join-Path $env:APPDATA 'Microsoft\Signatures'
+$sigPaths += $localSig
+
+# 2. Pasta do OneDrive (Novo Outlook / Outlook 365 com roaming signatures)
+$oneDrivePaths = @($env:OneDrive, $env:OneDriveCommercial, $env:OneDriveConsumer)
+foreach ($od in $oneDrivePaths) {
+    if ($od -and (Test-Path $od)) {
+        # Procurar pasta Signatures dentro do OneDrive
+        $odSig = Get-ChildItem -Path $od -Filter 'Signatures' -Directory -Recurse -Depth 3 -ErrorAction SilentlyContinue |
+                 Where-Object { $_.FullName -match 'Microsoft' } |
+                 Select-Object -First 1
+        if ($odSig) {
+            $sigPaths += $odSig.FullName
+        }
+    }
+}
+
+# Remover duplicatas
+$sigPaths = $sigPaths | Select-Object -Unique
+
+Write-Host ''
+Write-Host '============================================================' -ForegroundColor Cyan
+Write-Host '  INSTALADOR DE ASSINATURA - ATRIO HOTEL MANAGEMENT' -ForegroundColor Cyan
+Write-Host '============================================================' -ForegroundColor Cyan
+Write-Host ''
+
+foreach ($sigDir in $sigPaths) {
+    Write-Host "  Instalando em: $sigDir" -ForegroundColor Yellow
+    try {
+        # Criar pasta principal
+        if (-not (Test-Path $sigDir)) {
+            New-Item -Path $sigDir -ItemType Directory -Force | Out-Null
+        }
+
+        # Criar subpastas de arquivos (Outlook usa _arquivos e _files)
+        $filesDir1 = Join-Path $sigDir ($sigName + '_arquivos')
+        $filesDir2 = Join-Path $sigDir ($sigName + '_files')
+        if (-not (Test-Path $filesDir1)) { New-Item -Path $filesDir1 -ItemType Directory -Force | Out-Null }
+        if (-not (Test-Path $filesDir2)) { New-Item -Path $filesDir2 -ItemType Directory -Force | Out-Null }
+
+        # Gravar logomarca
+        $logoBytes = [System.Convert]::FromBase64String($logoB64)
+        [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'image001.png'), $logoBytes)
+        [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'image001.png'), $logoBytes)
+
+        # Gravar HTM
+        $htmText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($htmB64))
+        [System.IO.File]::WriteAllText((Join-Path $sigDir "$sigName.htm"), $htmText, [System.Text.Encoding]::UTF8)
+
+        # Gravar TXT
+        $txtText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($txtB64))
+        [System.IO.File]::WriteAllText((Join-Path $sigDir "$sigName.txt"), $txtText, [System.Text.Encoding]::UTF8)
+
+        # Gravar RTF
+        $rtfText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($rtfB64))
+        [System.IO.File]::WriteAllText((Join-Path $sigDir "$sigName.rtf"), $rtfText, [System.Text.Encoding]::UTF8)
+
+        $instalados += $sigDir
+        Write-Host "    [OK] Arquivos gravados com sucesso." -ForegroundColor Green
+    } catch {
+        $erros += "Erro em '$sigDir': $_"
+        Write-Host "    [ERRO] $_" -ForegroundColor Red
+    }
+}
+
+# --- Configurar como assinatura padrao via registro ---
+Write-Host ''
+Write-Host '  Configurando como assinatura padrao no Outlook...' -ForegroundColor Yellow
+
+$regPaths = @(
+    'HKCU:\Software\Microsoft\Office\16.0\Common\MailSettings',
+    'HKCU:\Software\Microsoft\Office\15.0\Common\MailSettings'
+)
+foreach ($rp in $regPaths) {
+    try {
+        if (-not (Test-Path $rp)) { New-Item -Path $rp -Force | Out-Null }
+        Set-ItemProperty -Path $rp -Name 'NewSignature' -Value $sigName -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $rp -Name 'ReplySignature' -Value $sigName -ErrorAction SilentlyContinue
+    } catch { }
+}
+
+# Configurar nos perfis do Outlook
+try {
+    Get-ChildItem 'HKCU:\Software\Microsoft\Office\16.0\Outlook\Profiles' -Recurse -ErrorAction SilentlyContinue |
+    ForEach-Object {
+        if ($_.Property -contains 'NewSignature' -or $_.Property -contains '001f6600') {
+            Set-ItemProperty -Path $_.PSPath -Name 'NewSignature' -Value $sigName -ErrorAction SilentlyContinue
+            Set-ItemProperty -Path $_.PSPath -Name 'ReplySignature' -Value $sigName -ErrorAction SilentlyContinue
+        }
+    }
+} catch { }
+
+Write-Host "    [OK] Registro configurado." -ForegroundColor Green
+
+# --- Resultado final ---
+Write-Host ''
+if ($erros.Count -eq 0) {
+    Write-Host '============================================================' -ForegroundColor Green
+    Write-Host "  SUCESSO! Assinatura '$sigName' instalada!" -ForegroundColor Green
+    Write-Host '============================================================' -ForegroundColor Green
+    Write-Host ''
+    Write-Host '  Pastas instaladas:' -ForegroundColor White
+    foreach ($p in $instalados) { Write-Host "    > $p" -ForegroundColor Gray }
+    Write-Host ''
+    Write-Host '  Abra ou reinicie o Outlook para utilizar.' -ForegroundColor White
+} else {
+    Write-Host '============================================================' -ForegroundColor Red
+    Write-Host '  ATENCAO: Ocorreram erros durante a instalacao!' -ForegroundColor Red
+    Write-Host '============================================================' -ForegroundColor Red
+    foreach ($e in $erros) { Write-Host "  $e" -ForegroundColor Red }
+}
+Write-Host ''
+`.trim().replace(/\r?\n/g, '\r\n');
+
+    const ps1Bytes = new TextEncoder().encode(ps1Content);
+    // Converter bytes para base64 de forma segura (sem spread operator que pode causar stack overflow)
+    let binaryStr = '';
+    for (let i = 0; i < ps1Bytes.length; i++) {
+      binaryStr += String.fromCharCode(ps1Bytes[i]);
+    }
+    const ps1Base64 = btoa(binaryStr);
+    const ps1Base64Lines = [];
+    for (let i = 0; i < ps1Base64.length; i += 76) {
+      ps1Base64Lines.push(ps1Base64.substring(i, i + 76));
+    }
+
+    const batFinal = `@echo off
 chcp 65001 >nul
 title Instalador de Assinatura - Atrio Hotel Management
 cls
@@ -262,44 +408,41 @@ echo ============================================================
 echo   INSTALADOR DE ASSINATURA - ATRIO HOTEL MANAGEMENT
 echo ============================================================
 echo.
-echo [1/4] Criando pastas oficiais de assinatura do Outlook...
-set "SIG_DIR=%APPDATA%\\Microsoft\\Signatures"
-set "FILES_DIR_1=%SIG_DIR%\\Atrio Hotel Management_arquivos"
-set "FILES_DIR_2=%SIG_DIR%\\Atrio Hotel Management_files"
-
-if not exist "%SIG_DIR%" mkdir "%SIG_DIR%"
-if not exist "%FILES_DIR_1%" mkdir "%FILES_DIR_1%"
-if not exist "%FILES_DIR_2%" mkdir "%FILES_DIR_2%"
-
-echo [2/4] Gravando imagem da logomarca oficial...
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllBytes('%FILES_DIR_1%\\image001.png', [System.Convert]::FromBase64String('${logoBase64}'))"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllBytes('%FILES_DIR_2%\\image001.png', [System.Convert]::FromBase64String('${logoBase64}'))"
-
-echo [3/4] Gravando arquivos de assinatura (HTM, RTF, TXT)...
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Atrio Hotel Management.htm', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Html}')), [System.Text.Encoding]::UTF8)"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Atrio Hotel Management.txt', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Txt}')), [System.Text.Encoding]::UTF8)"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.IO.File]::WriteAllText('%SIG_DIR%\\Atrio Hotel Management.rtf', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64Rtf}')), [System.Text.Encoding]::UTF8)"
-
-echo [4/4] Definindo 'Atrio Hotel Management' como assinatura padrao no Outlook...
-reg add "HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings" /v "NewSignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
-reg add "HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings" /v "ReplySignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
-reg add "HKCU\\Software\\Microsoft\\Office\\15.0\\Common\\MailSettings" /v "NewSignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
-reg add "HKCU\\Software\\Microsoft\\Office\\15.0\\Common\\MailSettings" /v "ReplySignature" /t REG_SZ /d "Atrio Hotel Management" /f >nul 2>&1
-
-powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-ChildItem 'HKCU:\\Software\\Microsoft\\Office\\16.0\\Outlook\\Profiles' -Recurse -ErrorAction SilentlyContinue | ForEach-Object { if ($_.Property -contains 'NewSignature' -or $_.Property -contains '001f6600') { Set-ItemProperty -Path $_.PSPath -Name 'NewSignature' -Value 'Atrio Hotel Management' -ErrorAction SilentlyContinue; Set-ItemProperty -Path $_.PSPath -Name 'ReplySignature' -Value 'Atrio Hotel Management' -ErrorAction SilentlyContinue } }" >nul 2>&1
-
+echo   Preparando instalacao, aguarde...
 echo.
-echo ============================================================
-echo   SUCESSO! Assinatura 'Atrio Hotel Management' instalada!
-echo ============================================================
+
+set "PS_B64=%TEMP%\atrio_sig.b64"
+set "PS_SCRIPT=%TEMP%\atrio_sig_install.ps1"
+
+(
+echo -----BEGIN CERTIFICATE-----
+${ps1Base64Lines.map(line => `echo ${line}`).join('\n')}
+echo -----END CERTIFICATE-----
+) > "%PS_B64%"
+
+certutil -decode "%PS_B64%" "%PS_SCRIPT%" >nul 2>&1
+
+if not exist "%PS_SCRIPT%" (
+    echo.
+    echo   [ERRO] Nao foi possivel preparar o instalador.
+    echo   Tente executar como Administrador.
+    echo.
+    pause
+    goto :fim
+)
+
+powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_SCRIPT%"
+
+del /q "%PS_B64%" >nul 2>&1
+del /q "%PS_SCRIPT%" >nul 2>&1
+
+:fim
 echo.
-echo A assinatura e a imagem foram configuradas com sucesso.
-echo Abra ou reinicie o Outlook para utilizar.
-echo.
-pause
+echo   Pressione qualquer tecla para fechar...
+pause >nul
 `;
 
-    const blob = new Blob([batContent], { type: 'application/bat' });
+    const blob = new Blob([batFinal], { type: 'application/bat' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
