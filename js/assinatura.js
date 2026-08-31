@@ -145,13 +145,15 @@
     ctx.font = '500 22px Montserrat, Arial, sans-serif';
     ctx.fillText('atriohoteis.com.br', 458, 196);
 
-    // 8. Barra Gradiente Inferior (Estende por toda a largura W)
-    if (assets.grad.complete && assets.grad.naturalWidth > 0) {
-      ctx.drawImage(assets.grad, 0, 240, W, 20);
-    } else {
-      ctx.fillStyle = '#DB9B0E';
-      ctx.fillRect(0, 240, W, 20);
-    }
+    // 8. Barra Gradiente Inferior (Gradiente vetorial de alta definição sem bordas ou ruídos)
+    const grad = ctx.createLinearGradient(0, 0, W, 0);
+    grad.addColorStop(0, '#C47F0A');
+    grad.addColorStop(0.25, '#DB9B0E');
+    grad.addColorStop(0.55, '#EBB426');
+    grad.addColorStop(0.85, '#DB9B0E');
+    grad.addColorStop(1, '#C6820B');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 240, W, 20);
   }
 
   /**
