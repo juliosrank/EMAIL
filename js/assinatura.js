@@ -50,56 +50,60 @@
 
     return `
 <div id="x_Signature">
-  <table style="font-family: 'Montserrat', 'Century Gothic', Arial, sans-serif; font-size: 12px; text-align: start; border-collapse: collapse; border-spacing: 0px; background-color: #ffffff; width: auto;" cellpadding="0" cellspacing="0">
+  <table style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; text-align: start; border-collapse: collapse; border-spacing: 0px; background-color: #ffffff; width: auto; line-height: normal;" cellpadding="0" cellspacing="0" border="0">
     <tbody>
       <tr>
         <!-- Coluna da Logomarca -->
-        <td valign="middle" align="center" style="padding: 10px 24px 10px 0px; border-right: 2px solid #DB9B0E; width: 180px;">
-          <a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:block;">
-            <img data-imagetype="External" src="${logoSrc}" alt="Atrio Hotel Management" width="180" height="35" style="display:block; outline:none; border:none; width:180px; height:auto; max-width:180px;">
+        <td valign="middle" align="center" style="padding: 10px 24px 10px 0px; border-right: 2px solid #DB9B0E; width: 180px; mso-line-height-rule: exactly;">
+          <a href="https://atriohoteis.com.br" target="_blank" style="text-decoration: none; display: block; border: 0; outline: none;">
+            <img data-imagetype="External" src="${logoSrc}" alt="Atrio Hotel Management" width="180" height="35" border="0" style="display: block; outline: none; border: 0; width: 180px; height: auto; max-width: 180px;">
           </a>
         </td>
 
         <!-- Coluna de Dados -->
-        <td valign="middle" align="left" style="padding: 6px 0px 6px 24px;">
-          <table cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+        <td valign="middle" align="left" style="padding: 4px 0px 4px 24px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; mso-line-height-rule: exactly;">
+          <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
             <tbody>
+              <!-- Nome -->
               <tr>
-                <td style="padding: 0px 0px 2px 0px;">
-                  <h1 style="margin:0px; font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:18px; font-weight:700; color:#000000; letter-spacing:1px; text-transform:uppercase; line-height:22px;">${nome}</h1>
+                <td style="padding: 0px 0px 2px 0px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 17px; font-weight: bold; color: #000000; letter-spacing: 1px; line-height: 20px; mso-line-height-rule: exactly;">
+                  <span style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 17px; font-weight: bold; color: #000000; letter-spacing: 1px; text-transform: uppercase;">${nome}</span>
                 </td>
               </tr>
+              <!-- Cargo -->
               <tr>
-                <td style="padding: 0px 0px 10px 0px;">
-                  <p style="margin:0px; font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:13px; font-weight:500; color:#DB9B0E; line-height:16px;">${cargo}</p>
+                <td style="padding: 0px 0px 10px 0px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 500; color: #DB9B0E; line-height: 16px; mso-line-height-rule: exactly;">
+                  <span style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 500; color: #DB9B0E;">${cargo}</span>
                 </td>
               </tr>
+              <!-- Telefone -->
               <tr>
-                <td style="padding: 0px 0px 5px 0px;">
-                  <table cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                <td style="padding: 0px 0px 4px 0px;">
+                  <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
                     <tbody>
                       <tr>
-                        <td valign="middle" width="16" style="width:16px; min-width:16px; max-width:16px; padding:0px 8px 0px 0px;">
-                          <img data-imagetype="External" src="${iconPhoneSrc}" alt="Telefone" width="16" height="16" style="display:block; width:16px; min-width:16px; max-width:16px; height:16px; min-height:16px; max-height:16px; border:none; outline:none;">
+                        <td valign="middle" width="16" height="16" style="width: 16px; height: 16px; font-size: 0px; line-height: 0px; mso-line-height-rule: exactly; padding: 0px 8px 0px 0px;">
+                          <img data-imagetype="External" src="${iconPhoneSrc}" alt="" width="16" height="16" border="0" style="display: block; width: 16px; height: 16px; border: 0; outline: none;">
                         </td>
-                        <td valign="middle" style="padding:0px; white-space:nowrap;">
-                          <a href="tel:${telefoneDigits}" style="font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:12px; font-weight:500; color:${telefoneColor}; text-decoration:none; line-height:16px;">${telefoneFormatted}</a>
+                        <td valign="middle" style="padding: 0px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 500; line-height: 16px; white-space: nowrap; mso-line-height-rule: exactly;">
+                          <a href="tel:${telefoneDigits}" style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 500; color: ${telefoneColor}; text-decoration: none; line-height: 16px;"><span style="color: ${telefoneColor}; text-decoration: none;">${telefoneFormatted}</span></a>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </td>
               </tr>
+              <!-- Website -->
               <tr>
                 <td style="padding: 0px;">
-                  <table cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                  <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
                     <tbody>
                       <tr>
-                        <td valign="middle" width="16" style="width:16px; min-width:16px; max-width:16px; padding:0px 8px 0px 0px;">
-                          <img data-imagetype="External" src="${iconSiteSrc}" alt="Website" width="16" height="16" style="display:block; width:16px; min-width:16px; max-width:16px; height:16px; min-height:16px; max-height:16px; border:none; outline:none;">
+                        <td valign="middle" width="16" height="16" style="width: 16px; height: 16px; font-size: 0px; line-height: 0px; mso-line-height-rule: exactly; padding: 0px 8px 0px 0px;">
+                          <img data-imagetype="External" src="${iconSiteSrc}" alt="" width="16" height="16" border="0" style="display: block; width: 16px; height: 16px; border: 0; outline: none;">
                         </td>
-                        <td valign="middle" style="padding:0px; white-space:nowrap;">
-                          <a href="https://atriohoteis.com.br" target="_blank" style="font-family:'Montserrat', 'Century Gothic', Arial, sans-serif; font-size:12px; font-weight:500; color:#000000; text-decoration:none; line-height:16px;">atriohoteis.com.br</a>
+                        <td valign="middle" style="padding: 0px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 500; line-height: 16px; white-space: nowrap; mso-line-height-rule: exactly;">
+                          <a href="https://atriohoteis.com.br" target="_blank" style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 500; color: #000000; text-decoration: none; line-height: 16px;"><span style="color: #000000; text-decoration: none;">atriohoteis.com.br</span></a>
                         </td>
                       </tr>
                     </tbody>
@@ -112,12 +116,12 @@
       </tr>
       <!-- Barra Gradiente Dourada Inferior -->
       <tr>
-        <td colspan="2" style="padding: 12px 0px 0px 0px;">
-          <table cellpadding="0" cellspacing="0" width="100%" style="width: 100%; border-collapse: collapse;">
+        <td colspan="2" style="padding: 12px 0px 0px 0px; font-size: 0px; line-height: 0px; mso-line-height-rule: exactly;">
+          <table cellpadding="0" cellspacing="0" width="100%" border="0" style="width: 100%; border-collapse: collapse;">
             <tbody>
               <tr>
-                <td height="10" style="height: 10px; font-size: 1px; line-height: 1px; background-color: #DB9B0E;">
-                  <img data-imagetype="External" src="${gradientSrc}" alt="" width="100%" height="10" style="display:block; width:100%; height:10px; max-height:10px; border:none; outline:none;">
+                <td height="10" style="height: 10px; font-size: 0px; line-height: 0px; background-color: #DB9B0E; mso-line-height-rule: exactly;">
+                  <img data-imagetype="External" src="${gradientSrc}" alt="" width="100%" height="10" border="0" style="display: block; width: 100%; height: 10px; max-height: 10px; border: 0; outline: none;">
                 </td>
               </tr>
             </tbody>
