@@ -12,9 +12,10 @@
   const inputCargo = document.getElementById('cargo');
   const inputTelefone = document.getElementById('telefone');
 
-  const signatureOutput = document.getElementById('signature-output');
+  const signatureCanvas = document.getElementById('signature-canvas');
   const btnCopySignature = document.getElementById('btn-copy-signature');
   const btnCopyText = document.getElementById('btn-copy-text');
+  const btnDownloadImage = document.getElementById('btn-download-image');
   const btnClearData = document.getElementById('btn-clear-data');
   const btnInstallDesktop = document.getElementById('btn-install-desktop');
 
@@ -28,123 +29,29 @@
 
   const toastContainer = document.getElementById('toast-container');
 
-  /**
-   * Constrói o HTML da assinatura para a Web e Área de Transferência
-   */
-  function buildSignatureHTML(data) {
-    const nomeText = data.nome ? data.nome.trim().toUpperCase() : '';
-    const nome = nomeText ? escapeHtml(nomeText) : '<span style="color:#94a3b8">NOME SOBRENOME</span>';
-    
-    // Cargo (Title Case / Mantém a capitalização digitada pelo usuário)
-    const cargo = data.cargo ? escapeHtml(data.cargo.trim()) : '<span style="color:#94a3b8">Cargo</span>';
+  // Pré-carregamento dos assets de imagem
+  const assets = {
+    logo: new Image(),
+    phone: new Image(),
+    site: new Image(),
+    grad: new Image(),
+    loaded: false
+  };
 
-    // URLs das imagens públicas (GitHub raw para compatibilidade universal)
-    const logoSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/atrio.png';
-    const iconPhoneSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/telefone.png';
-    const iconSiteSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/site.png';
-    const gradientSrc = 'https://raw.githubusercontent.com/juliosrank/EMAIL/main/logomarca/gradiente.png';
+  assets.logo.src = 'logomarca/atrio.png';
+  assets.phone.src = 'logomarca/telefone.png';
+  assets.site.src = 'logomarca/site.png';
+  assets.grad.src = 'logomarca/gradiente.png';
 
-    const telefoneFormatted = data.telefone ? escapeHtml(data.telefone.trim()) : '<span style="color:#94a3b8">(00) 0000-0000</span>';
-    const telefoneDigits = data.telefone ? data.telefone.replace(/\D/g, '') : '0000000000';
-    const telefoneColor = data.telefone ? '#000000' : '#94a3b8';
-
-    return `
-<div id="x_Signature">
-  <table style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; text-align: start; border-collapse: collapse; border-spacing: 0px; background-color: #ffffff; width: auto; line-height: normal;" cellpadding="0" cellspacing="0" border="0">
-    <tbody>
-      <tr>
-        <!-- Coluna da Logomarca -->
-        <td valign="middle" align="center" style="padding: 10px 24px 10px 0px; border-right: 2px solid #DB9B0E; width: 180px; mso-line-height-rule: exactly;">
-          <a href="https://atriohoteis.com.br" target="_blank" style="text-decoration: none; display: block; border: 0; outline: none;">
-            <img data-imagetype="External" src="${logoSrc}" alt="Atrio Hotel Management" width="180" height="35" border="0" style="display: block; outline: none; border: 0; width: 180px; height: auto; max-width: 180px;">
-          </a>
-        </td>
-
-        <!-- Coluna de Dados -->
-        <td valign="middle" align="left" style="padding: 4px 0px 4px 24px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; mso-line-height-rule: exactly;">
-          <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
-            <tbody>
-              <!-- Nome -->
-              <tr>
-                <td style="padding: 0px 0px 2px 0px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 17px; font-weight: bold; color: #000000; letter-spacing: 1px; line-height: 20px; mso-line-height-rule: exactly;">
-                  <span style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 17px; font-weight: bold; color: #000000; letter-spacing: 1px; text-transform: uppercase;">${nome}</span>
-                </td>
-              </tr>
-              <!-- Cargo -->
-              <tr>
-                <td style="padding: 0px 0px 10px 0px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 500; color: #DB9B0E; line-height: 16px; mso-line-height-rule: exactly;">
-                  <span style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 500; color: #DB9B0E;">${cargo}</span>
-                </td>
-              </tr>
-              <!-- Telefone -->
-              <tr>
-                <td style="padding: 0px 0px 4px 0px;">
-                  <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
-                    <tbody>
-                      <tr>
-                        <td valign="middle" width="16" height="16" style="width: 16px; height: 16px; font-size: 0px; line-height: 0px; mso-line-height-rule: exactly; padding: 0px 8px 0px 0px;">
-                          <img data-imagetype="External" src="${iconPhoneSrc}" alt="" width="16" height="16" border="0" style="display: block; width: 16px; height: 16px; border: 0; outline: none;">
-                        </td>
-                        <td valign="middle" style="padding: 0px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 500; line-height: 16px; white-space: nowrap; mso-line-height-rule: exactly;">
-                          <a href="tel:${telefoneDigits}" style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 500; color: ${telefoneColor}; text-decoration: none; line-height: 16px;"><span style="color: ${telefoneColor}; text-decoration: none;">${telefoneFormatted}</span></a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-              <!-- Website -->
-              <tr>
-                <td style="padding: 0px;">
-                  <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
-                    <tbody>
-                      <tr>
-                        <td valign="middle" width="16" height="16" style="width: 16px; height: 16px; font-size: 0px; line-height: 0px; mso-line-height-rule: exactly; padding: 0px 8px 0px 0px;">
-                          <img data-imagetype="External" src="${iconSiteSrc}" alt="" width="16" height="16" border="0" style="display: block; width: 16px; height: 16px; border: 0; outline: none;">
-                        </td>
-                        <td valign="middle" style="padding: 0px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 500; line-height: 16px; white-space: nowrap; mso-line-height-rule: exactly;">
-                          <a href="https://atriohoteis.com.br" target="_blank" style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 500; color: #000000; text-decoration: none; line-height: 16px;"><span style="color: #000000; text-decoration: none;">atriohoteis.com.br</span></a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      <!-- Barra Gradiente Dourada Inferior -->
-      <tr>
-        <td colspan="2" style="padding: 12px 0px 0px 0px; font-size: 0px; line-height: 0px; mso-line-height-rule: exactly;">
-          <table cellpadding="0" cellspacing="0" width="100%" border="0" style="width: 100%; border-collapse: collapse;">
-            <tbody>
-              <tr>
-                <td height="10" style="height: 10px; font-size: 0px; line-height: 0px; background-color: #DB9B0E; mso-line-height-rule: exactly;">
-                  <img data-imagetype="External" src="${gradientSrc}" alt="" width="100%" height="10" border="0" style="display: block; width: 100%; height: 10px; max-height: 10px; border: 0; outline: none;">
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-    `.trim();
-  }
-
-  function escapeHtml(text) {
-    if (!text) return '';
-    const map = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#039;'
-    };
-    return String(text).replace(/[&<>"']/g, m => map[m]);
-  }
+  const preloadPromise = Promise.all([
+    document.fonts ? document.fonts.ready : Promise.resolve(),
+    new Promise(resolve => { assets.logo.onload = assets.logo.onerror = resolve; }),
+    new Promise(resolve => { assets.phone.onload = assets.phone.onerror = resolve; }),
+    new Promise(resolve => { assets.site.onload = assets.site.onerror = resolve; }),
+    new Promise(resolve => { assets.grad.onload = assets.grad.onerror = resolve; })
+  ]).then(() => {
+    assets.loaded = true;
+  });
 
   function getFormData() {
     return {
@@ -154,120 +61,187 @@
     };
   }
 
+  /**
+   * Renderiza a assinatura no Canvas em 2x (Retina / Alta Resolução)
+   */
   function renderSignature() {
+    if (!signatureCanvas) return;
+    const ctx = signatureCanvas.getContext('2d');
     const data = getFormData();
-    signatureOutput.innerHTML = buildSignatureHTML(data);
+
+    // Resolução física 2x para nitidez máxima (920 x 260)
+    const W = 920;
+    const H = 260;
+    signatureCanvas.width = W;
+    signatureCanvas.height = H;
+
+    // 1. Fundo Branco
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
+
+    // 2. Logomarca Atrio (Coluna Esquerda)
+    if (assets.logo.complete && assets.logo.naturalWidth > 0) {
+      const logoW = 330;
+      const logoH = Math.round(logoW * (assets.logo.naturalHeight / assets.logo.naturalWidth));
+      const logoX = 25;
+      const logoY = Math.round((240 - logoH) / 2);
+      ctx.drawImage(assets.logo, logoX, logoY, logoW, logoH);
+    }
+
+    // 3. Divisor Vertical Dourado
+    ctx.fillStyle = '#DB9B0E';
+    ctx.fillRect(380, 24, 4, 192);
+
+    // 4. Nome Completo (Negrito, Caixa Alta)
+    const nomeText = data.nome ? data.nome.trim().toUpperCase() : 'NOME SOBRENOME';
+    ctx.fillStyle = data.nome ? '#000000' : '#94a3b8';
+    ctx.font = '700 34px Montserrat, Arial, sans-serif';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(nomeText, 415, 62);
+
+    // 5. Cargo (Title Case / Dourado)
+    const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
+    ctx.fillStyle = data.cargo ? '#DB9B0E' : '#94a3b8';
+    ctx.font = '500 24px Montserrat, Arial, sans-serif';
+    ctx.fillText(cargoText, 415, 104);
+
+    // 6. Telefone (Ícone + Texto)
+    if (assets.phone.complete && assets.phone.naturalWidth > 0) {
+      ctx.drawImage(assets.phone, 415, 126, 32, 32);
+    }
+    const telText = data.telefone ? data.telefone.trim() : '(00) 0000-0000';
+    ctx.fillStyle = data.telefone ? '#000000' : '#94a3b8';
+    ctx.font = '500 22px Montserrat, Arial, sans-serif';
+    ctx.fillText(telText, 458, 150);
+
+    // 7. Website (Ícone + Texto)
+    if (assets.site.complete && assets.site.naturalWidth > 0) {
+      ctx.drawImage(assets.site, 415, 172, 32, 32);
+    }
+    ctx.fillStyle = '#000000';
+    ctx.font = '500 22px Montserrat, Arial, sans-serif';
+    ctx.fillText('atriohoteis.com.br', 458, 196);
+
+    // 8. Barra Gradiente Inferior
+    if (assets.grad.complete && assets.grad.naturalWidth > 0) {
+      ctx.drawImage(assets.grad, 0, 240, W, 20);
+    } else {
+      ctx.fillStyle = '#DB9B0E';
+      ctx.fillRect(0, 240, W, 20);
+    }
   }
 
   /**
-   * Copia a assinatura formatada em HTML rico
+   * Copia a assinatura como imagem com link ativo para o site
    */
   async function copySignatureToClipboard() {
-    const signatureElement = document.getElementById('x_Signature');
-    if (!signatureElement) {
-      showToast('Preencha os campos para gerar a assinatura.');
-      return;
-    }
+    if (!signatureCanvas) return;
 
-    const htmlContent = signatureElement.outerHTML;
-    const plainText = signatureElement.innerText || signatureElement.textContent;
-
-    let success = false;
-
-    if (navigator.clipboard && window.ClipboardItem) {
-      try {
-        const blobHtml = new Blob([htmlContent], { type: 'text/html' });
-        const blobText = new Blob([plainText], { type: 'text/plain' });
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            'text/html': blobHtml,
-            'text/plain': blobText
-          })
-        ]);
-        success = true;
-      } catch (err) {
-        console.warn('ClipboardItem fallback:', err);
-      }
-    }
-
-    if (!success) {
-      try {
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(signatureElement);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        success = document.execCommand('copy');
-        selection.removeAllRanges();
-      } catch (err) {
-        console.error('Erro na cópia:', err);
-      }
-    }
-
-    if (success) {
-      btnCopySignature.classList.add('copied');
-      btnCopyText.textContent = 'Assinatura Copiada!';
-      showToast('Assinatura copiada com sucesso! Cole (Ctrl+V) no Outlook.');
-
-      setTimeout(() => {
-        btnCopySignature.classList.remove('copied');
-        btnCopyText.textContent = 'Copiar Assinatura';
-      }, 2500);
-    } else {
-      showToast('Não foi possível copiar automaticamente. Selecione e use Ctrl+C.');
-    }
-  }
-
-  /**
-   * Converte uma imagem para Base64
-   */
-  async function getImageBase64(path) {
     try {
-      const response = await fetch(path);
-      const blob = await response.blob();
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const res = reader.result;
-          resolve(res.split(',')[1]);
-        };
-        reader.readAsDataURL(blob);
-      });
+      const dataUrl = signatureCanvas.toDataURL('image/png');
+      
+      // HTML com a imagem linkada para atriohoteis.com.br
+      const htmlContent = `<a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:inline-block; outline:none; border:none;"><img src="${dataUrl}" alt="Atrio Hotel Management" width="460" height="130" style="display:block; width:460px; height:130px; border:0; outline:none;" border="0"></a>`;
+      
+      signatureCanvas.toBlob(async (blob) => {
+        let success = false;
+
+        if (navigator.clipboard && window.ClipboardItem) {
+          try {
+            const htmlBlob = new Blob([htmlContent], { type: 'text/html' });
+            await navigator.clipboard.write([
+              new ClipboardItem({
+                'text/html': htmlBlob,
+                'image/png': blob
+              })
+            ]);
+            success = true;
+          } catch (err) {
+            console.warn('ClipboardItem error, tentando fallback:', err);
+          }
+        }
+
+        if (!success) {
+          // Fallback para seleção de elemento
+          const tempDiv = document.createElement('div');
+          tempDiv.contentEditable = 'true';
+          tempDiv.innerHTML = htmlContent;
+          tempDiv.style.position = 'fixed';
+          tempDiv.style.left = '-9999px';
+          document.body.appendChild(tempDiv);
+          
+          const range = document.createRange();
+          range.selectNodeContents(tempDiv);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          
+          success = document.execCommand('copy');
+          document.body.removeChild(tempDiv);
+          sel.removeAllRanges();
+        }
+
+        if (success) {
+          btnCopySignature.classList.add('copied');
+          btnCopyText.textContent = 'Assinatura Copiada!';
+          showToast('Assinatura copiada com sucesso! Cole (Ctrl+V) no Outlook.');
+
+          setTimeout(() => {
+            btnCopySignature.classList.remove('copied');
+            btnCopyText.textContent = 'Copiar Assinatura';
+          }, 2500);
+        } else {
+          showToast('Não foi possível copiar automaticamente. Use o botão "Baixar Imagem".');
+        }
+      }, 'image/png');
+
     } catch (e) {
-      return '';
+      console.error('Erro ao copiar:', e);
+      showToast('Erro ao copiar imagem. Tente usar "Baixar Imagem".');
     }
   }
 
   /**
-   * Gera e baixa o instalador automático .bat para o Outlook Desktop com suporte completo a RTF, HTM e imagens.
+   * Baixa a imagem gerada em PNG
+   */
+  function downloadSignatureImage() {
+    if (!signatureCanvas) return;
+    const dataUrl = signatureCanvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = 'Assinatura_Atrio.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('Imagem da assinatura baixada (.png)!');
+  }
+
+  /**
+   * Gera o instalador .bat para Outlook Desktop configurando a imagem da assinatura
    */
   async function generateDesktopInstaller() {
+    if (!signatureCanvas) return;
     const data = getFormData();
-    const logoBase64 = await getImageBase64('logomarca/atrio.png');
-    const phoneBase64 = await getImageBase64('logomarca/telefone.png');
-    const siteBase64 = await getImageBase64('logomarca/site.png');
-    const gradientBase64 = await getImageBase64('logomarca/gradiente.png');
+    const dataUrl = signatureCanvas.toDataURL('image/png');
+    const sigBase64 = dataUrl.split(',')[1];
 
-    // HTML formatado para o arquivo .htm do Outlook Desktop
+    const nomeText = data.nome ? data.nome.trim().toUpperCase() : 'NOME SOBRENOME';
+    const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
+    const telefoneText = data.telefone ? data.telefone.trim() : '';
+
     const rawHtml = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML><HEAD><TITLE>Atrio Hotel Management</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
 </HEAD>
 <BODY style="margin:0; padding:0;">
-${buildSignatureHTML(data)}
+<a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:inline-block; border:0;"><img src="Atrio Hotel Management_arquivos/signature.png" alt="Atrio Hotel Management" width="460" height="130" style="display:block; width:460px; height:130px; border:0; outline:none;" border="0"></a>
 </BODY></HTML>`;
 
-    const nomeText = data.nome ? data.nome.trim().toUpperCase() : 'NOME COMPLETO';
-    const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
-    const telefoneText = data.telefone ? data.telefone.trim() : '';
-
-    // Plain text format
     const plainText = `${nomeText}
 ${cargoText}
 ${telefoneText}
 atriohoteis.com.br`;
 
-    // RTF format (necessário para o diálogo de seleção de assinaturas padrão do Outlook)
     const rtfContent = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1046{\\fonttbl{\\f0\\fnil\\fcharset0 Montserrat;}{\\f1\\fnil\\fcharset0 Segoe UI;}{\\f2\\fnil\\fcharset0 Arial;}}
 {\\colortbl ;\\red219\\green155\\blue14;\\red0\\green0\\blue0;}
 {\\*\\generator AtrioSignatureGenerator;}
@@ -282,7 +256,6 @@ atriohoteis.com.br`;
     const base64Txt = btoa(unescape(encodeURIComponent(plainText)));
     const base64Rtf = btoa(unescape(encodeURIComponent(rtfContent)));
 
-    // Gera um script PowerShell completo que será escrito em arquivo temporário pelo .bat
     const ps1Content = `
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = 'Stop'
@@ -290,23 +263,15 @@ $sigName = 'Atrio Hotel Management'
 $erros = @()
 $instalados = @()
 
-# --- Dados Base64 embutidos ---
-$logoB64 = '${logoBase64}'
-$phoneB64 = '${phoneBase64}'
-$siteB64 = '${siteBase64}'
-$gradB64 = '${gradientBase64}'
+$sigB64 = '${sigBase64}'
 $htmB64 = '${base64Html}'
 $txtB64 = '${base64Txt}'
 $rtfB64 = '${base64Rtf}'
 
-# --- Detectar todas as pastas de assinatura possiveis ---
 $sigPaths = @()
-
-# 1. Pasta local padrao do Outlook Desktop classico
 $localSig = Join-Path $env:APPDATA 'Microsoft\\Signatures'
 $sigPaths += $localSig
 
-# 2. Pasta do OneDrive (Novo Outlook / Outlook 365 com roaming signatures)
 $oneDrivePaths = @($env:OneDrive, $env:OneDriveCommercial, $env:OneDriveConsumer)
 foreach ($od in $oneDrivePaths) {
     if ($od -and (Test-Path $od)) {
@@ -318,8 +283,6 @@ foreach ($od in $oneDrivePaths) {
         }
     }
 }
-
-# Remover duplicatas
 $sigPaths = $sigPaths | Select-Object -Unique
 
 Write-Host ''
@@ -331,48 +294,27 @@ Write-Host ''
 foreach ($sigDir in $sigPaths) {
     Write-Host "  Instalando em: $sigDir" -ForegroundColor Yellow
     try {
-        # Criar pasta principal
         if (-not (Test-Path $sigDir)) {
             New-Item -Path $sigDir -ItemType Directory -Force | Out-Null
         }
 
-        # Criar subpastas de arquivos (Outlook usa _arquivos e _files)
         $filesDir1 = Join-Path $sigDir ($sigName + '_arquivos')
         $filesDir2 = Join-Path $sigDir ($sigName + '_files')
         if (-not (Test-Path $filesDir1)) { New-Item -Path $filesDir1 -ItemType Directory -Force | Out-Null }
         if (-not (Test-Path $filesDir2)) { New-Item -Path $filesDir2 -ItemType Directory -Force | Out-Null }
 
-        # Gravar logomarca e icones
-        if ($logoB64) {
-            $logoBytes = [System.Convert]::FromBase64String($logoB64)
-            [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'atrio.png'), $logoBytes)
-            [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'atrio.png'), $logoBytes)
-        }
-        if ($phoneB64) {
-            $phoneBytes = [System.Convert]::FromBase64String($phoneB64)
-            [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'telefone.png'), $phoneBytes)
-            [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'telefone.png'), $phoneBytes)
-        }
-        if ($siteB64) {
-            $siteBytes = [System.Convert]::FromBase64String($siteB64)
-            [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'site.png'), $siteBytes)
-            [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'site.png'), $siteBytes)
-        }
-        if ($gradB64) {
-            $gradBytes = [System.Convert]::FromBase64String($gradB64)
-            [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'gradiente.png'), $gradBytes)
-            [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'gradiente.png'), $gradBytes)
+        if ($sigB64) {
+            $sigBytes = [System.Convert]::FromBase64String($sigB64)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir1 'signature.png'), $sigBytes)
+            [System.IO.File]::WriteAllBytes((Join-Path $filesDir2 'signature.png'), $sigBytes)
         }
 
-        # Gravar HTM
         $htmText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($htmB64))
         [System.IO.File]::WriteAllText((Join-Path $sigDir "$sigName.htm"), $htmText, [System.Text.Encoding]::UTF8)
 
-        # Gravar TXT
         $txtText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($txtB64))
         [System.IO.File]::WriteAllText((Join-Path $sigDir "$sigName.txt"), $txtText, [System.Text.Encoding]::UTF8)
 
-        # Gravar RTF
         $rtfText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($rtfB64))
         [System.IO.File]::WriteAllText((Join-Path $sigDir "$sigName.rtf"), $rtfText, [System.Text.Encoding]::UTF8)
 
@@ -384,7 +326,6 @@ foreach ($sigDir in $sigPaths) {
     }
 }
 
-# --- Configurar como assinatura padrao via registro ---
 Write-Host ''
 Write-Host '  Configurando como assinatura padrao no Outlook...' -ForegroundColor Yellow
 
@@ -400,7 +341,6 @@ foreach ($rp in $regPaths) {
     } catch { }
 }
 
-# Configurar nos perfis do Outlook
 try {
     Get-ChildItem 'HKCU:\\Software\\Microsoft\\Office\\16.0\\Outlook\\Profiles' -Recurse -ErrorAction SilentlyContinue |
     ForEach-Object {
@@ -412,23 +352,17 @@ try {
 } catch { }
 
 Write-Host "    [OK] Registro configurado." -ForegroundColor Green
-
-# --- Resultado final ---
 Write-Host ''
 if ($erros.Count -eq 0) {
     Write-Host '============================================================' -ForegroundColor Green
     Write-Host "  SUCESSO! Assinatura '$sigName' instalada!" -ForegroundColor Green
     Write-Host '============================================================' -ForegroundColor Green
     Write-Host ''
-    Write-Host '  Pastas instaladas:' -ForegroundColor White
-    foreach ($p in $instalados) { Write-Host "    > $p" -ForegroundColor Gray }
-    Write-Host ''
     Write-Host '  Abra ou reinicie o Outlook para utilizar.' -ForegroundColor White
 } else {
     Write-Host '============================================================' -ForegroundColor Red
     Write-Host '  ATENCAO: Ocorreram erros durante a instalacao!' -ForegroundColor Red
     Write-Host '============================================================' -ForegroundColor Red
-    foreach ($e in $erros) { Write-Host "  $e" -ForegroundColor Red }
 }
 Write-Host ''
 `.trim().replace(/\r?\n/g, '\r\n');
@@ -562,6 +496,7 @@ pause >nul
 
     if (btnClearData) btnClearData.addEventListener('click', clearForm);
     if (btnCopySignature) btnCopySignature.addEventListener('click', copySignatureToClipboard);
+    if (btnDownloadImage) btnDownloadImage.addEventListener('click', downloadSignatureImage);
     if (btnInstallDesktop) btnInstallDesktop.addEventListener('click', generateDesktopInstaller);
 
     if (btnHelp) btnHelp.addEventListener('click', () => openHelpModal('tab-desktop'));
@@ -589,6 +524,7 @@ pause >nul
 
   function init() {
     setupEvents();
+    preloadPromise.then(renderSignature);
     renderSignature();
   }
 
@@ -599,4 +535,3 @@ pause >nul
   }
 
 })();
-

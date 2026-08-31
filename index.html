@@ -69,7 +69,7 @@ https://www.linkedin.com/in/juliosrank/ -->
           <div class="preview-canvas">
             <div class="signature-stage">
               <div id="signature-output" class="signature-output">
-                <!-- Assinatura renderizada via JS -->
+                <canvas id="signature-canvas" width="920" height="260" style="display: block; max-width: 100%; height: auto;"></canvas>
               </div>
             </div>
           </div>
@@ -85,6 +85,18 @@ https://www.linkedin.com/in/juliosrank/ -->
             </button>
 
             <div class="secondary-actions">
+              <button type="button" 
+                      id="btn-download-image" 
+                      class="btn-action btn-image" 
+                      title="Baixar imagem da assinatura em formato PNG de alta resolução">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Baixar Imagem (.png)</span>
+              </button>
+
               <a href="https://outlook.cloud.microsoft/mail/options/accounts-category/signatures-subcategory/RoamingSignatureOption" 
                  target="_blank" 
                  rel="noopener noreferrer" 
@@ -103,11 +115,10 @@ https://www.linkedin.com/in/juliosrank/ -->
                       class="btn-action btn-desktop"
                       title="Instalar automaticamente os arquivos de assinatura no seu Outlook Desktop">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                  <path d="M4 17l6-6-6-6"></path>
+                  <path d="M12 19h8"></path>
                 </svg>
-                <span>Instalar no Outlook Desktop (.bat)</span>
+                <span>Instalar no Desktop (.bat)</span>
               </button>
             </div>
           </div>
@@ -176,7 +187,7 @@ https://www.linkedin.com/in/juliosrank/ -->
   <div class="toast-container" id="toast-container"></div>
 
   <!-- Scripts -->
-  <script src="js/formatarTelefone.js?v=1.0.8"></script>
-  <script src="js/assinatura.js?v=1.0.8"></script>
+  <script src="js/formatarTelefone.js?v=2.0.0"></script>
+  <script src="js/assinatura.js?v=2.0.0"></script>
 </body>
 </html>
