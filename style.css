@@ -1,7 +1,17 @@
-/* ==========================================================================
-   CSS Corporativo - Atrio Hotel Management
-   Paleta Oficial: Dourado #DB9B0E / Grafite / Branco
-   ========================================================================== */
+/* Fontes Personalizadas Corporativas */
+@font-face {
+  font-family: 'Funkis';
+  src: url('logomarca/FunkisA.1.2.3TRIAL-Regular-BF65138f81db20d.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Funkis';
+  src: url('logomarca/FunkisA.1.2.3TRIAL-Bold-BF65138f80ccb5c.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
 
 :root {
   --primary: #DB9B0E;

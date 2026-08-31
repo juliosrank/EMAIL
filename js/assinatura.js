@@ -29,25 +29,35 @@
 
   const toastContainer = document.getElementById('toast-container');
 
-  // Pré-carregamento das imagens
+  // Pré-carregamento dos assets de imagem
   const assets = {
     logo: new Image(),
     phone: new Image(),
     site: new Image(),
+    grad: new Image(),
     loaded: false
   };
 
   assets.logo.src = 'logomarca/atrio.png';
   assets.phone.src = 'logomarca/telefone.png';
   assets.site.src = 'logomarca/site.png';
+  assets.grad.src = 'logomarca/gradiente.png';
+
+  // Carregamento das fontes personalizadas Funkis
+  const fontRegular = new FontFace('Funkis', "url('logomarca/FunkisA.1.2.3TRIAL-Regular-BF65138f81db20d.otf')", { weight: '400' });
+  const fontBold = new FontFace('Funkis', "url('logomarca/FunkisA.1.2.3TRIAL-Bold-BF65138f80ccb5c.otf')", { weight: '700' });
 
   const preloadPromise = Promise.all([
+    fontRegular.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis Regular:', e)),
+    fontBold.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis Bold:', e)),
     document.fonts ? document.fonts.ready : Promise.resolve(),
     new Promise(resolve => { assets.logo.onload = assets.logo.onerror = resolve; }),
     new Promise(resolve => { assets.phone.onload = assets.phone.onerror = resolve; }),
-    new Promise(resolve => { assets.site.onload = assets.site.onerror = resolve; })
+    new Promise(resolve => { assets.site.onload = assets.site.onerror = resolve; }),
+    new Promise(resolve => { assets.grad.onload = assets.grad.onerror = resolve; })
   ]).then(() => {
     assets.loaded = true;
+    renderSignature();
   });
 
   function getFormData() {
@@ -59,7 +69,7 @@
   }
 
   /**
-   * Renderiza a assinatura no Canvas em 2x (Retina / Alta Resolução) com fundo 100% transparente
+   * Renderiza a assinatura no Canvas em 2x (Retina / Alta Resolução) com fontes Funkis personalizadas
    */
   function renderSignature() {
     if (!signatureCanvas) return;
@@ -70,23 +80,23 @@
     const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
     const telText = data.telefone ? data.telefone.trim() : '(00) 0000-0000';
 
-    // Medição de largura dos textos para auto-expansão dinâmica
+    // Medição de largura com a nova fonte Funkis para auto-expansão dinâmica
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
 
-    tempCtx.font = '700 34px Montserrat, Arial, sans-serif';
+    tempCtx.font = "700 34px 'Funkis', Montserrat, Arial, sans-serif";
     const nomeWidth = tempCtx.measureText(nomeText).width;
 
-    tempCtx.font = '500 24px Montserrat, Arial, sans-serif';
+    tempCtx.font = "400 24px 'Funkis', Montserrat, Arial, sans-serif";
     const cargoWidth = tempCtx.measureText(cargoText).width;
 
-    tempCtx.font = '500 22px Montserrat, Arial, sans-serif';
+    tempCtx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
     const telWidth = tempCtx.measureText(telText).width + 50;
     const siteWidth = tempCtx.measureText('atriohoteis.com.br').width + 50;
 
     const maxContentRight = Math.max(nomeWidth, cargoWidth, telWidth, siteWidth);
 
-    // Largura dinâmica (mínimo 920px em 2x = 460px em 1x)
+    // Largura dinâmica
     const rightPadding = 35;
     const minW = 920;
     const W = Math.max(minW, 415 + Math.round(maxContentRight) + rightPadding);
@@ -97,7 +107,7 @@
     signatureCanvas.style.width = (W / 2) + 'px';
     signatureCanvas.style.height = (H / 2) + 'px';
 
-    // 1. Fundo 100% Transparente (Sem caixa cinza ou branca)
+    // 1. Fundo 100% Transparente
     ctx.clearRect(0, 0, W, H);
 
     // 2. Logomarca Atrio (Coluna Esquerda)
@@ -113,42 +123,40 @@
     ctx.fillStyle = '#DB9B0E';
     ctx.fillRect(380, 24, 4, 192);
 
-    // 4. Nome Completo (Negrito, Caixa Alta)
+    // 4. Nome Completo (Funkis Bold, Caixa Alta)
     ctx.fillStyle = data.nome ? '#000000' : '#94a3b8';
-    ctx.font = '700 34px Montserrat, Arial, sans-serif';
+    ctx.font = "700 34px 'Funkis', Montserrat, Arial, sans-serif";
     ctx.textBaseline = 'alphabetic';
     ctx.fillText(nomeText, 415, 62);
 
-    // 5. Cargo (Title Case / Dourado)
+    // 5. Cargo (Funkis Regular, Dourado)
     ctx.fillStyle = data.cargo ? '#DB9B0E' : '#94a3b8';
-    ctx.font = '500 24px Montserrat, Arial, sans-serif';
+    ctx.font = "400 24px 'Funkis', Montserrat, Arial, sans-serif";
     ctx.fillText(cargoText, 415, 104);
 
-    // 6. Telefone (Ícone + Texto)
+    // 6. Telefone (Ícone + Funkis Regular)
     if (assets.phone.complete && assets.phone.naturalWidth > 0) {
       ctx.drawImage(assets.phone, 415, 126, 32, 32);
     }
     ctx.fillStyle = data.telefone ? '#000000' : '#94a3b8';
-    ctx.font = '500 22px Montserrat, Arial, sans-serif';
+    ctx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
     ctx.fillText(telText, 458, 150);
 
-    // 7. Website (Ícone + Texto)
+    // 7. Website (Ícone + Funkis Regular)
     if (assets.site.complete && assets.site.naturalWidth > 0) {
       ctx.drawImage(assets.site, 415, 172, 32, 32);
     }
     ctx.fillStyle = '#000000';
-    ctx.font = '500 22px Montserrat, Arial, sans-serif';
+    ctx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
     ctx.fillText('atriohoteis.com.br', 458, 196);
 
-    // 8. Barra Gradiente Inferior (Gradiente vetorial puro em tons dourados oficiais)
-    const grad = ctx.createLinearGradient(0, 0, W, 0);
-    grad.addColorStop(0, '#C47F0A');
-    grad.addColorStop(0.25, '#DB9B0E');
-    grad.addColorStop(0.55, '#EBB426');
-    grad.addColorStop(0.85, '#DB9B0E');
-    grad.addColorStop(1, '#C6820B');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 240, W, 20);
+    // 8. Barra Gradiente Oficial (Imagem oficial recortada nas proporções exatas da marca)
+    if (assets.grad.complete && assets.grad.naturalWidth > 0) {
+      ctx.drawImage(assets.grad, 0, 240, W, 20);
+    } else {
+      ctx.fillStyle = '#DB9B0E';
+      ctx.fillRect(0, 240, W, 20);
+    }
   }
 
   /**
@@ -295,7 +303,7 @@ ${cargoText}
 ${telefoneText}
 atriohoteis.com.br`;
 
-    const rtfContent = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1046{\\fonttbl{\\f0\\fnil\\fcharset0 Montserrat;}{\\f1\\fnil\\fcharset0 Segoe UI;}{\\f2\\fnil\\fcharset0 Arial;}}
+    const rtfContent = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1046{\\fonttbl{\\f0\\fnil\\fcharset0 Funkis;}{\\f1\\fnil\\fcharset0 Montserrat;}{\\f2\\fnil\\fcharset0 Arial;}}
 {\\colortbl ;\\red219\\green155\\blue14;\\red0\\green0\\blue0;}
 {\\*\\generator AtrioSignatureGenerator;}
 \\viewkind4\\uc1 
