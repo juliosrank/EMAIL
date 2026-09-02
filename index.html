@@ -24,9 +24,8 @@ https://www.linkedin.com/in/juliosrank/ -->
         <div class="header-brand">
           <img src="logomarca/atrio.png" alt="Atrio Hotel Management" class="header-logo">
           <h1 class="app-title">Gerador de Assinatura de E-mail</h1>
-          <span style="font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 9999px; font-weight: 600;">v2.0.8</span>
+          <span style="font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 9999px; font-weight: 600;">v2.0.9</span>
         </div>
-        <button type="button" id="btn-help" class="btn-help">Como Configurar</button>
       </div>
     </header>
 
@@ -34,7 +33,7 @@ https://www.linkedin.com/in/juliosrank/ -->
     <main class="main-content">
       <div class="workspace-grid">
         
-        <!-- Formulário (Lado Esquerdo) -->
+        <!-- Formulário e Como Configurar (Lado Esquerdo) -->
         <section class="panel form-panel">
           <div class="panel-header">
             <h2>Dados Pessoais</h2>
@@ -56,18 +55,41 @@ https://www.linkedin.com/in/juliosrank/ -->
               <label for="telefone">Telefone</label>
               <input type="tel" id="telefone" name="telefone" placeholder="Telefone">
             </div>
+          </form>
 
-            <div class="form-hints">
-              <div class="hint-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                <span>A assinatura é renderizada dinamicamente em alta resolução.</span>
-              </div>
-              <div class="hint-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                <span>Padrão visual corporativo oficial Atrio Hotel Management.</span>
+          <!-- Orientações de Como Configurar Integradas na Página -->
+          <div class="guide-panel-inline">
+            <div class="guide-header-inline">
+              <span class="guide-title">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                Como Configurar
+              </span>
+              <div class="guide-tabs-pills">
+                <button type="button" class="tab-item active" data-tab="tab-web">Outlook Web</button>
+                <button type="button" class="tab-item" data-tab="tab-desktop">Desktop</button>
               </div>
             </div>
-          </form>
+
+            <div class="guide-body-inline">
+              <!-- Guia Web (Ativo por padrão) -->
+              <div class="tab-content active" id="tab-web">
+                <ol class="guide-steps">
+                  <li>Preencha seus dados e clique no botão dourado <strong>"Copiar Assinatura"</strong>.</li>
+                  <li>Clique no botão azul <strong>"Inserir no Outlook Web"</strong> para abrir suas assinaturas.</li>
+                  <li>Clique em <strong>"+ Nova assinatura"</strong>, cole (<strong>Ctrl + V</strong>) e clique em <strong>Salvar</strong>.</li>
+                </ol>
+              </div>
+
+              <!-- Guia Desktop -->
+              <div class="tab-content" id="tab-desktop">
+                <ol class="guide-steps">
+                  <li>Preencha seus dados e clique no botão dourado <strong>"Copiar Assinatura"</strong>.</li>
+                  <li>No seu Outlook Desktop, acesse <strong>Arquivo</strong> &rarr; <strong>Opções</strong> &rarr; <strong>Email</strong> &rarr; <strong>Assinaturas</strong>.</li>
+                  <li>Clique em <strong>Novo</strong>, cole (<strong>Ctrl + V</strong>) e defina como padrão para Novas mensagens e Respostas.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- Visualizador e Ações (Lado Direito) -->
@@ -144,66 +166,11 @@ https://www.linkedin.com/in/juliosrank/ -->
     </main>
   </div>
 
-  <!-- Modal de Ajuda -->
-  <div class="modal-overlay" id="help-modal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>Como Configurar sua Assinatura</h3>
-        <button type="button" class="btn-close" id="btn-close-modal" aria-label="Fechar">&times;</button>
-      </div>
-
-      <div class="modal-tabs">
-        <button type="button" class="tab-item active" data-tab="tab-desktop">Outlook Desktop</button>
-        <button type="button" class="tab-item" data-tab="tab-web">Outlook Web</button>
-      </div>
-
-      <div class="modal-body">
-        <!-- Guia Desktop -->
-        <div class="tab-content active" id="tab-desktop">
-          <div class="guide-box">
-            <h4>Método 1: Instalação Automática (.bat) - Recomendado</h4>
-            <p>1. Preencha seus dados no formulário e clique no botão <strong>"Instalar no Outlook Desktop (.bat)"</strong>.</p>
-            <p>2. Abra o arquivo baixado. Ele cria os arquivos <code>.htm</code>, <code>.rtf</code> e a pasta de imagens diretamente em <code>%APPDATA%\Microsoft\Signatures</code> e configura como padrão no Outlook.</p>
-            <p>3. Abra ou reinicie o Outlook: sua nova assinatura já estará ativa e pronta!</p>
-          </div>
-
-          <div class="guide-box">
-            <h4>Método 2: Manual pelo Outlook</h4>
-            <ol>
-              <li>Copie a assinatura clicando no botão <strong>"Copiar Assinatura"</strong>.</li>
-              <li>No Outlook Desktop, vá em <strong>Arquivo</strong> &rarr; <strong>Opções</strong> &rarr; <strong>Email</strong> &rarr; <strong>Assinaturas</strong>.</li>
-              <li>Clique em <strong>Novo</strong>, digite <em>Atrio Hotel Management</em> e cole (<strong>Ctrl + V</strong>) na caixa de texto.</li>
-              <li>Defina como assinatura padrão para <strong>Novas mensagens</strong> e <strong>Respostas</strong> e clique em <strong>OK</strong>.</li>
-            </ol>
-          </div>
-        </div>
-
-        <!-- Guia Web -->
-        <div class="tab-content" id="tab-web">
-          <div class="guide-box">
-            <h4>Configuração no Outlook Web (Navegador)</h4>
-            <ol>
-              <li>Preencha seus dados e clique em <strong>"Copiar Assinatura"</strong>.</li>
-              <li>Clique no botão <strong>"Inserir no Outlook Web"</strong> para acessar a tela de assinaturas.</li>
-              <li>Clique em <strong>"+ Nova assinatura"</strong>, digite <em>Atrio</em> e cole (<strong>Ctrl + V</strong>) na caixa de edição.</li>
-              <li>Defina como padrão para novas mensagens e respostas.</li>
-              <li>Clique em <strong>Salvar</strong>.</li>
-            </ol>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn-modal-close" id="btn-modal-close">Fechar</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 
   <!-- Scripts -->
-  <script src="js/formatarTelefone.js?v=2.0.8"></script>
-  <script src="js/assinatura.js?v=2.0.8"></script>
+  <script src="js/formatarTelefone.js?v=2.0.9"></script>
+  <script src="js/assinatura.js?v=2.0.9"></script>
 </body>
 </html>
