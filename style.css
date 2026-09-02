@@ -45,9 +45,8 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100%;
   width: 100%;
-  overflow: hidden;
   background-color: var(--bg-page);
   color: var(--text-body);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -60,9 +59,9 @@ html, body {
 .app-layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-page);
 }
 
 /* Header */
@@ -74,7 +73,7 @@ html, body {
 }
 
 .header-inner {
-  max-width: 1240px;
+  max-width: 1200px;
   height: 100%;
   margin: 0 auto;
   padding: 0 20px;
@@ -126,20 +125,19 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 20px;
-  max-width: 1240px;
+  padding: 28px 20px;
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .workspace-grid {
   display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 16px;
+  grid-template-columns: 350px 1fr;
+  gap: 20px;
   width: 100%;
-  height: 100%;
-  max-height: calc(100vh - 86px);
+  align-items: stretch;
 }
 
 /* Painéis */
@@ -147,10 +145,10 @@ html, body {
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
 }
 
 .panel-header {
@@ -188,21 +186,20 @@ html, body {
   font-weight: 500;
 }
 
-/* Formulário (Sem barras de rolagem) */
+/* Formulário */
 .form-panel {
   display: flex;
   flex-direction: column;
 }
 
 .form-body {
-  padding: 16px 18px;
+  padding: 18px 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  gap: 12px;
   width: 100%;
   box-sizing: border-box;
+  flex: 1;
 }
 
 .form-row {
@@ -219,7 +216,7 @@ html, body {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   width: 100%;
 }
 
@@ -232,7 +229,7 @@ html, body {
 .form-group input {
   width: 100%;
   box-sizing: border-box;
-  padding: 8px 10px;
+  padding: 9px 12px;
   font-size: 0.85rem;
   font-family: inherit;
   color: var(--text-title);
@@ -253,6 +250,31 @@ html, body {
   box-shadow: 0 0 0 2px var(--primary-glow);
 }
 
+/* Dicas no rodapé do formulário para preenchimento harmônico */
+.form-hints {
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hint-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.hint-item svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--primary);
+}
+
 /* Painel de Pré-visualização */
 .preview-panel {
   display: flex;
@@ -262,11 +284,14 @@ html, body {
 
 .preview-canvas {
   flex: 1;
-  background-color: #ffffff;
-  padding: 16px;
+  background-color: #f8fafc;
+  background-image: radial-gradient(#e2e8f0 1.2px, transparent 1.2px);
+  background-size: 16px 16px;
+  padding: 24px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 200px;
   overflow: auto;
 }
 
@@ -274,13 +299,18 @@ html, body {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: var(--radius-md);
-  padding: 24px 28px;
+  padding: 16px 20px;
   width: auto;
   max-width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.signature-stage:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 .signature-output {
@@ -301,12 +331,12 @@ html, body {
 
 /* Painel de Ações */
 .actions-panel {
-  padding: 12px 18px;
+  padding: 14px 20px;
   border-top: 1px solid var(--border);
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
 }
 
@@ -320,30 +350,39 @@ html, body {
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.15s, transform 0.1s;
+  transition: all 0.15s ease;
 }
 
 .btn-copy {
   width: 100%;
-  padding: 10px 16px;
+  padding: 11px 16px;
   background-color: var(--primary);
   color: #ffffff;
   border: 1px solid var(--primary);
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(219, 155, 14, 0.25);
 }
 
 .btn-copy:hover {
   background-color: var(--primary-hover);
+  box-shadow: 0 4px 12px rgba(219, 155, 14, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-copy:active {
+  transform: translateY(0);
 }
 
 .btn-copy.copied {
   background-color: var(--success);
   border-color: var(--success);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .secondary-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 10px;
 }
 
 @media (max-width: 900px) {
@@ -352,18 +391,56 @@ html, body {
   }
 }
 
-.btn-web, .btn-desktop, .btn-image {
-  padding: 8px 10px;
+/* Botão Inserir no Outlook Web (Destacado) */
+.btn-web {
+  padding: 9px 14px;
+  background: linear-gradient(135deg, #0078d4 0%, #0063b1 100%);
+  border: 1px solid #005a9e;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 120, 212, 0.25);
+}
+
+.btn-web:hover {
+  background: linear-gradient(135deg, #006cbe 0%, #005291 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 120, 212, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-web:active {
+  transform: translateY(0);
+}
+
+/* Botão Baixar Imagem */
+.btn-image {
+  padding: 9px 14px;
+  background-color: #ffffff;
+  border: 1px solid var(--border);
+  color: var(--text-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.btn-image:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: var(--text-title);
+  transform: translateY(-1px);
+}
+
+.btn-image:active {
+  transform: translateY(0);
+}
+
+.btn-desktop {
+  padding: 9px 14px;
   background-color: #f8fafc;
   border: 1px solid var(--border);
   color: var(--text-body);
-  font-size: 0.78rem;
-}
-
-.btn-web:hover, .btn-desktop:hover, .btn-image:hover {
-  background-color: #f1f5f9;
-  border-color: #cbd5e1;
-  color: var(--text-title);
+  font-size: 0.82rem;
 }
 
 /* Modal */
