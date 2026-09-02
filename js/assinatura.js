@@ -107,8 +107,9 @@
     signatureCanvas.style.width = (W / 2) + 'px';
     signatureCanvas.style.height = (H / 2) + 'px';
 
-    // 1. Fundo 100% Transparente
-    ctx.clearRect(0, 0, W, H);
+    // 1. Fundo Branco Sólido
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
 
     // 2. Logomarca Atrio (Coluna Esquerda)
     if (assets.logo.complete && assets.logo.naturalWidth > 0) {
@@ -294,7 +295,7 @@
 <HTML><HEAD><TITLE>Atrio Hotel Management</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
 </HEAD>
-<BODY style="margin:0; padding:0; background:transparent;">
+<BODY style="margin:0; padding:0; background:#ffffff;">
 <a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:inline-block; border:0;"><img src="Atrio Hotel Management_arquivos/signature.png" alt="Atrio Hotel Management" width="${displayW}" height="${displayH}" style="display:block; width:${displayW}px; height:${displayH}px; border:0; outline:none;" border="0"></a>
 </BODY></HTML>`;
 
