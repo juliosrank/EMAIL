@@ -43,13 +43,22 @@
   assets.site.src = 'logomarca/site.png';
   assets.grad.src = 'logomarca/gradiente.png';
 
-  // Carregamento das fontes personalizadas Funkis
-  const fontRegular = new FontFace('Funkis', "url('logomarca/FunkisA.1.2.3TRIAL-Regular-BF65138f81db20d.otf')", { weight: '400' });
-  const fontBold = new FontFace('Funkis', "url('logomarca/FunkisA.1.2.3TRIAL-Bold-BF65138f80ccb5c.otf')", { weight: '700' });
+  // Carregamento das fontes personalizadas Funkis (Bold, Regular e Light)
+  const fontLight = new FontFace('Funkis-Light', "url('logomarca/FunkisA.1.2.3TRIAL-Light-BF65138f818e8dc.otf')", { weight: '300' });
+  const fontRegular = new FontFace('Funkis-Regular', "url('logomarca/FunkisA.1.2.3TRIAL-Regular-BF65138f81db20d.otf')", { weight: '400' });
+  const fontBold = new FontFace('Funkis-Bold', "url('logomarca/FunkisA.1.2.3TRIAL-Bold-BF65138f80ccb5c.otf')", { weight: '700' });
+
+  const fontGenLight = new FontFace('Funkis', "url('logomarca/FunkisA.1.2.3TRIAL-Light-BF65138f818e8dc.otf')", { weight: '300' });
+  const fontGenRegular = new FontFace('Funkis', "url('logomarca/FunkisA.1.2.3TRIAL-Regular-BF65138f81db20d.otf')", { weight: '400' });
+  const fontGenBold = new FontFace('Funkis', "url('logomarca/FunkisA.1.2.3TRIAL-Bold-BF65138f80ccb5c.otf')", { weight: '700' });
 
   const preloadPromise = Promise.all([
-    fontRegular.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis Regular:', e)),
-    fontBold.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis Bold:', e)),
+    fontLight.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis-Light:', e)),
+    fontRegular.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis-Regular:', e)),
+    fontBold.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis-Bold:', e)),
+    fontGenLight.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis 300:', e)),
+    fontGenRegular.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis 400:', e)),
+    fontGenBold.load().then(f => document.fonts.add(f)).catch(e => console.warn('Erro ao carregar Funkis 700:', e)),
     document.fonts ? document.fonts.ready : Promise.resolve(),
     new Promise(resolve => { assets.logo.onload = assets.logo.onerror = resolve; }),
     new Promise(resolve => { assets.phone.onload = assets.phone.onerror = resolve; }),
@@ -84,13 +93,13 @@
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
 
-    tempCtx.font = "700 32px 'Funkis', Montserrat, Arial, sans-serif";
+    tempCtx.font = "700 32px 'Funkis-Bold', 'Funkis', Montserrat, Arial, sans-serif";
     const nomeWidth = tempCtx.measureText(nomeText).width;
 
-    tempCtx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
+    tempCtx.font = "400 22px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
     const cargoWidth = tempCtx.measureText(cargoText).width;
 
-    tempCtx.font = "400 21px 'Funkis', Montserrat, Arial, sans-serif";
+    tempCtx.font = "400 21px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
     const telWidth = tempCtx.measureText(telText).width + 36;
     const siteWidth = tempCtx.measureText('atriohoteis.com.br').width + 36;
 
@@ -126,13 +135,13 @@
 
     // 4. Nome Completo (Funkis Bold, marca 230 da régua = 460 em 2x, baseline 34 = 68 em 2x)
     ctx.fillStyle = data.nome ? '#000000' : '#94a3b8';
-    ctx.font = "700 32px 'Funkis', Montserrat, Arial, sans-serif";
+    ctx.font = "700 32px 'Funkis-Bold', 'Funkis', Montserrat, Arial, sans-serif";
     ctx.textBaseline = 'alphabetic';
     ctx.fillText(nomeText, 460, 68);
 
     // 5. Cargo (Funkis Regular, Dourado, marca 230 da régua = 460 em 2x, baseline 50 = 100 em 2x)
     ctx.fillStyle = data.cargo ? '#DB9B0E' : '#94a3b8';
-    ctx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
+    ctx.font = "400 22px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
     ctx.fillText(cargoText, 460, 100);
 
     // 6. Telefone (Ícone 24x24 em Y=144 + Funkis Regular baseline 165 em X=492)
@@ -140,7 +149,7 @@
       ctx.drawImage(assets.phone, 460, 144, 24, 24);
     }
     ctx.fillStyle = data.telefone ? '#000000' : '#94a3b8';
-    ctx.font = "400 21px 'Funkis', Montserrat, Arial, sans-serif";
+    ctx.font = "400 21px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
     ctx.fillText(telText, 492, 165);
 
     // 7. Website (Ícone 24x24 em Y=178 + Funkis Regular baseline 195 em X=492)
@@ -148,7 +157,7 @@
       ctx.drawImage(assets.site, 460, 178, 24, 24);
     }
     ctx.fillStyle = '#000000';
-    ctx.font = "400 21px 'Funkis', Montserrat, Arial, sans-serif";
+    ctx.font = "400 21px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
     ctx.fillText('atriohoteis.com.br', 492, 195);
 
     // 8. Barra Gradiente Oficial (marca 123 da régua = Y=246 em 2x, altura 14px)
