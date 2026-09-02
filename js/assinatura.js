@@ -84,23 +84,23 @@
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
 
-    tempCtx.font = "700 34px 'Funkis', Montserrat, Arial, sans-serif";
+    tempCtx.font = "700 32px 'Funkis', Montserrat, Arial, sans-serif";
     const nomeWidth = tempCtx.measureText(nomeText).width;
 
-    tempCtx.font = "400 24px 'Funkis', Montserrat, Arial, sans-serif";
+    tempCtx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
     const cargoWidth = tempCtx.measureText(cargoText).width;
 
-    tempCtx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
-    const telWidth = tempCtx.measureText(telText).width + 50;
-    const siteWidth = tempCtx.measureText('atriohoteis.com.br').width + 50;
+    tempCtx.font = "400 21px 'Funkis', Montserrat, Arial, sans-serif";
+    const telWidth = tempCtx.measureText(telText).width + 36;
+    const siteWidth = tempCtx.measureText('atriohoteis.com.br').width + 36;
 
     const maxContentRight = Math.max(nomeWidth, cargoWidth, telWidth, siteWidth);
 
-    // Largura dinâmica
-    const rightPadding = 35;
+    // Largura dinâmica (mínimo 920px em 2x = 460px da régua)
+    const rightPadding = 40;
     const minW = 920;
-    const W = Math.max(minW, 415 + Math.round(maxContentRight) + rightPadding);
-    const H = 270;
+    const W = Math.max(minW, 460 + Math.round(maxContentRight) + rightPadding);
+    const H = 260;
 
     signatureCanvas.width = W;
     signatureCanvas.height = H;
@@ -111,52 +111,52 @@
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, W, H);
 
-    // 2. Logomarca Atrio (Coluna Esquerda)
+    // 2. Logomarca Atrio (Coluna Esquerda 0 a 400, centralizada)
     if (assets.logo.complete && assets.logo.naturalWidth > 0) {
-      const logoW = 330;
+      const logoW = 280;
       const logoH = Math.round(logoW * (assets.logo.naturalHeight / assets.logo.naturalWidth));
-      const logoX = 25;
-      const logoY = Math.round((250 - logoH) / 2);
+      const logoX = Math.round((400 - logoW) / 2);
+      const logoY = Math.round((246 - logoH) / 2);
       ctx.drawImage(assets.logo, logoX, logoY, logoW, logoH);
     }
 
-    // 3. Divisor Vertical Dourado
+    // 3. Divisor Vertical Dourado (marca 200 da régua = 400 em 2x)
     ctx.fillStyle = '#DB9B0E';
-    ctx.fillRect(380, 22, 4, 206);
+    ctx.fillRect(400, 39, 3, 163);
 
-    // 4. Nome Completo (Funkis Bold, Caixa Alta)
+    // 4. Nome Completo (Funkis Bold, marca 230 da régua = 460 em 2x, baseline 34 = 68 em 2x)
     ctx.fillStyle = data.nome ? '#000000' : '#94a3b8';
-    ctx.font = "700 34px 'Funkis', Montserrat, Arial, sans-serif";
+    ctx.font = "700 32px 'Funkis', Montserrat, Arial, sans-serif";
     ctx.textBaseline = 'alphabetic';
-    ctx.fillText(nomeText, 415, 58);
+    ctx.fillText(nomeText, 460, 68);
 
-    // 5. Cargo (Funkis Regular, Dourado)
+    // 5. Cargo (Funkis Regular, Dourado, marca 230 da régua = 460 em 2x, baseline 50 = 100 em 2x)
     ctx.fillStyle = data.cargo ? '#DB9B0E' : '#94a3b8';
-    ctx.font = "400 24px 'Funkis', Montserrat, Arial, sans-serif";
-    ctx.fillText(cargoText, 415, 94);
+    ctx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
+    ctx.fillText(cargoText, 460, 100);
 
-    // 6. Telefone (Ícone + Funkis Regular - com espaçamento maior após o cargo)
+    // 6. Telefone (Ícone 24x24 em Y=144 + Funkis Regular baseline 165 em X=492)
     if (assets.phone.complete && assets.phone.naturalWidth > 0) {
-      ctx.drawImage(assets.phone, 415, 134, 32, 32);
+      ctx.drawImage(assets.phone, 460, 144, 24, 24);
     }
     ctx.fillStyle = data.telefone ? '#000000' : '#94a3b8';
-    ctx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
-    ctx.fillText(telText, 458, 158);
+    ctx.font = "400 21px 'Funkis', Montserrat, Arial, sans-serif";
+    ctx.fillText(telText, 492, 165);
 
-    // 7. Website (Ícone + Funkis Regular)
+    // 7. Website (Ícone 24x24 em Y=178 + Funkis Regular baseline 195 em X=492)
     if (assets.site.complete && assets.site.naturalWidth > 0) {
-      ctx.drawImage(assets.site, 415, 178, 32, 32);
+      ctx.drawImage(assets.site, 460, 178, 24, 24);
     }
     ctx.fillStyle = '#000000';
-    ctx.font = "400 22px 'Funkis', Montserrat, Arial, sans-serif";
-    ctx.fillText('atriohoteis.com.br', 458, 202);
+    ctx.font = "400 21px 'Funkis', Montserrat, Arial, sans-serif";
+    ctx.fillText('atriohoteis.com.br', 492, 195);
 
-    // 8. Barra Gradiente Oficial (Imagem oficial recortada nas proporções exatas da marca)
+    // 8. Barra Gradiente Oficial (marca 123 da régua = Y=246 em 2x, altura 14px)
     if (assets.grad.complete && assets.grad.naturalWidth > 0) {
-      ctx.drawImage(assets.grad, 0, 250, W, 20);
+      ctx.drawImage(assets.grad, 0, 246, W, 14);
     } else {
       ctx.fillStyle = '#DB9B0E';
-      ctx.fillRect(0, 250, W, 20);
+      ctx.fillRect(0, 246, W, 14);
     }
   }
 
