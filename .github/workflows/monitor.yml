@@ -1,0 +1,77 @@
+name: SBJV Flight Cancellation Monitor
+
+on:
+  schedule:
+    # --------------------------------------------------------------------------
+    # MAPEAMENTO DE CRON UTC vs AMERICA/SAO_PAULO (UTC-3)
+    # --------------------------------------------------------------------------
+    # 1. Sexta-feira: 19:00 às 23:59 BRT
+    #    -> Sexta-feira 22:00 às 23:59 UTC
+    #    -> Sábado 00:00 às 02:59 UTC
+    - cron: '*/10 22-23 * * 5'
+    - cron: '*/10 0-2 * * 6'
+
+    # 2. Sábado: 05:00 às 23:00 BRT
+    #    -> Sábado 08:00 às 23:59 UTC
+    #    -> Domingo 00:00 às 02:00 UTC
+    - cron: '*/10 8-23 * * 6'
+    - cron: '*/10 0-2 * * 0'
+
+    # 3. Domingo: 06:00 às 14:00 BRT
+    #    -> Domingo 09:00 às 17:00 UTC
+    - cron: '*/10 9-17 * * 0'
+
+  # Permite disparo manual via interface do GitHub Actions
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Forçar execução ignorando janelas de horário'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  check-flights:
+    name: Check Cancelled Departures (SBJV)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: sbjv-flight-monitor/package.json
+
+      - name: Restore Deduplication State Cache
+        uses: actions/cache@v4
+        with:
+          path: sbjv-flight-monitor/data/dedup.json
+          key: sbjv-dedup-${{ github.run_id }}
+          restore-keys: |
+            sbjv-dedup-
+
+      - name: Install Dependencies
+        working-directory: sbjv-flight-monitor
+        run: npm ci
+
+      - name: Build Project
+        working-directory: sbjv-flight-monitor
+        run: npm run build
+
+      - name: Run Cancellation Monitor Check
+        working-directory: sbjv-flight-monitor
+        env:
+          AEROAPI_KEY: ${{ secrets.AEROAPI_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ENABLE_EMAIL: ${{ secrets.ENABLE_EMAIL || 'false' }}
+          EMAIL_PROVIDER: ${{ secrets.EMAIL_PROVIDER || 'resend' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ALERT_TO_EMAIL: ${{ secrets.ALERT_TO_EMAIL }}
+          FORCE_RUN: ${{ inputs.force_run || 'false' }}
+          TIMEZONE: America/Sao_Paulo
+        run: node dist/index.js --once

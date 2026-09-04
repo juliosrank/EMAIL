@@ -33,6 +33,7 @@
   const assets = {
     logo: new Image(),
     phone: new Image(),
+    email: new Image(),
     site: new Image(),
     grad: new Image(),
     loaded: false
@@ -40,6 +41,7 @@
 
   assets.logo.src = 'logomarca/atrio.png';
   assets.phone.src = 'logomarca/telefone.png';
+  assets.email.src = 'logomarca/email.png';
   assets.site.src = 'logomarca/site.png';
   assets.grad.src = 'logomarca/gradiente.png';
 
@@ -62,6 +64,7 @@
     document.fonts ? document.fonts.ready : Promise.resolve(),
     new Promise(resolve => { assets.logo.onload = assets.logo.onerror = resolve; }),
     new Promise(resolve => { assets.phone.onload = assets.phone.onerror = resolve; }),
+    new Promise(resolve => { assets.email.onload = assets.email.onerror = resolve; }),
     new Promise(resolve => { assets.site.onload = assets.site.onerror = resolve; }),
     new Promise(resolve => { assets.grad.onload = assets.grad.onerror = resolve; })
   ]).then(() => {
@@ -70,10 +73,15 @@
   });
 
   function getFormData() {
+    const rawContato = inputTelefone ? inputTelefone.value.trim() : '';
+    const contatoType = typeof window.detectContactType === 'function'
+      ? window.detectContactType(rawContato)
+      : (/[a-zA-Z]/.test(rawContato) || rawContato.includes('@') ? 'email' : (/\d/.test(rawContato) ? 'phone' : 'empty'));
     return {
       nome: inputNome ? inputNome.value.trim() : '',
       cargo: inputCargo ? inputCargo.value.trim() : '',
-      telefone: inputTelefone ? inputTelefone.value.trim() : ''
+      telefone: rawContato,
+      contatoType: contatoType
     };
   }
 
@@ -87,7 +95,8 @@
 
     const nomeText = data.nome ? data.nome.trim().toUpperCase() : 'NOME SOBRENOME';
     const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
-    const telText = data.telefone ? data.telefone.trim() : '(00) 0000-0000';
+    const hasContact = data.contatoType !== 'empty' && data.telefone.length > 0;
+    const contactText = hasContact ? data.telefone : '';
 
     // Medição de largura com a nova fonte Funkis para auto-expansão dinâmica
     const tempCanvas = document.createElement('canvas');
@@ -100,10 +109,10 @@
     const cargoWidth = tempCtx.measureText(cargoText).width;
 
     tempCtx.font = "400 21px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
-    const telWidth = tempCtx.measureText(telText).width + 36;
+    const contactWidth = hasContact ? (tempCtx.measureText(contactText).width + 36) : 0;
     const siteWidth = tempCtx.measureText('atriohoteis.com.br').width + 36;
 
-    const maxContentRight = Math.max(nomeWidth, cargoWidth, telWidth, siteWidth);
+    const maxContentRight = Math.max(nomeWidth, cargoWidth, contactWidth, siteWidth);
 
     // Largura dinâmica (mínimo 920px em 2x = 460px da régua)
     const rightPadding = 40;
@@ -144,21 +153,35 @@
     ctx.font = "400 22px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
     ctx.fillText(cargoText, 460, 100);
 
-    // 6. Telefone (Ícone 24x24 em Y=144 + Funkis Regular baseline 165 em X=492)
-    if (assets.phone.complete && assets.phone.naturalWidth > 0) {
-      ctx.drawImage(assets.phone, 460, 144, 24, 24);
-    }
-    ctx.fillStyle = data.telefone ? '#000000' : '#94a3b8';
-    ctx.font = "400 21px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
-    ctx.fillText(telText, 492, 165);
+    // 6 e 7. Contato (Telefone ou E-mail) & Website
+    if (hasContact) {
+      // Caso haja contato (Telefone ou E-mail preenchido)
+      const contactIcon = data.contatoType === 'email' ? assets.email : assets.phone;
+      if (contactIcon && contactIcon.complete && contactIcon.naturalWidth > 0) {
+        ctx.drawImage(contactIcon, 460, 144, 24, 24);
+      }
+      ctx.fillStyle = '#000000';
+      ctx.font = "400 21px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
+      ctx.fillText(contactText, 492, 165);
 
-    // 7. Website (Ícone 24x24 em Y=178 + Funkis Regular baseline 195 em X=492)
-    if (assets.site.complete && assets.site.naturalWidth > 0) {
-      ctx.drawImage(assets.site, 460, 178, 24, 24);
+      // Website (Linha 4: Ícone 24x24 em Y=178 + texto baseline 195 em X=492)
+      if (assets.site.complete && assets.site.naturalWidth > 0) {
+        ctx.drawImage(assets.site, 460, 178, 24, 24);
+      }
+      ctx.fillStyle = '#000000';
+      ctx.font = "400 21px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
+      ctx.fillText('atriohoteis.com.br', 492, 195);
+    } else {
+      // Caso a pessoa não preencha telefone nem e-mail:
+      // Não exibe ícone de telefone/e-mail nem texto de contato.
+      // O website sobe para a linha 3 mantendo equilíbrio e elegância visual
+      if (assets.site.complete && assets.site.naturalWidth > 0) {
+        ctx.drawImage(assets.site, 460, 148, 24, 24);
+      }
+      ctx.fillStyle = '#000000';
+      ctx.font = "400 21px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
+      ctx.fillText('atriohoteis.com.br', 492, 169);
     }
-    ctx.fillStyle = '#000000';
-    ctx.font = "400 21px 'Funkis-Regular', 'Funkis', Montserrat, Arial, sans-serif";
-    ctx.fillText('atriohoteis.com.br', 492, 195);
 
     // 8. Barra Gradiente Oficial (marca 123 da régua = Y=246 em 2x, altura 14px)
     if (assets.grad.complete && assets.grad.naturalWidth > 0) {
@@ -295,7 +318,7 @@
 
     const nomeText = data.nome ? data.nome.trim().toUpperCase() : 'NOME SOBRENOME';
     const cargoText = data.cargo ? data.cargo.trim() : 'Cargo';
-    const telefoneText = data.telefone ? data.telefone.trim() : '';
+    const contactText = (data.contatoType !== 'empty' && data.telefone) ? data.telefone.trim() : '';
 
     const displayW = Math.round(signatureCanvas.width / 2);
     const displayH = Math.round(signatureCanvas.height / 2);
@@ -308,19 +331,21 @@
 <a href="https://atriohoteis.com.br" target="_blank" style="text-decoration:none; display:inline-block; border:0;"><img src="Atrio Hotel Management_arquivos/signature.png" alt="Atrio Hotel Management" width="${displayW}" height="${displayH}" style="display:block; width:${displayW}px; height:${displayH}px; border:0; outline:none;" border="0"></a>
 </BODY></HTML>`;
 
-    const plainText = `${nomeText}
-${cargoText}
-${telefoneText}
-atriohoteis.com.br`;
+    const plainText = [
+      nomeText,
+      cargoText,
+      contactText,
+      'atriohoteis.com.br'
+    ].filter(Boolean).join('\r\n');
 
+    const contactRtf = contactText ? `\\fs16\\cf2 ${contactText}\\par\r\n` : '';
     const rtfContent = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1046{\\fonttbl{\\f0\\fnil\\fcharset0 Funkis;}{\\f1\\fnil\\fcharset0 Montserrat;}{\\f2\\fnil\\fcharset0 Arial;}}
 {\\colortbl ;\\red219\\green155\\blue14;\\red0\\green0\\blue0;}
 {\\*\\generator AtrioSignatureGenerator;}
 \\viewkind4\\uc1 
 \\pard\\sa60\\sl240\\slmult1\\b\\f0\\fs22\\cf2 ${nomeText}\\b0\\par
 \\f0\\fs18\\cf1 ${cargoText}\\par
-\\fs16\\cf2 ${telefoneText}\\par
-\\fs16\\cf2 atriohoteis.com.br\\par
+${contactRtf}\\fs16\\cf2 atriohoteis.com.br\\par
 }`;
 
     const base64Html = btoa(unescape(encodeURIComponent(rawHtml)));
@@ -508,7 +533,12 @@ pause >nul
   function clearForm() {
     if (inputNome) inputNome.value = '';
     if (inputCargo) inputCargo.value = '';
-    if (inputTelefone) inputTelefone.value = '';
+    if (inputTelefone) {
+      inputTelefone.value = '';
+      if (typeof window.updateContactField === 'function') {
+        window.updateContactField(inputTelefone);
+      }
+    }
     renderSignature();
     showToast('Formulário limpo.');
     if (inputNome) inputNome.focus();

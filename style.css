@@ -278,6 +278,37 @@ html, body {
   box-shadow: 0 0 0 2px var(--primary-glow);
 }
 
+.input-with-icon {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input {
+  padding-right: 36px;
+}
+
+.field-icon {
+  position: absolute;
+  right: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-placeholder);
+  pointer-events: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.field-icon[data-type="phone"],
+.field-icon[data-type="email"] {
+  color: var(--primary);
+}
+
+.field-icon svg {
+  display: block;
+}
+
 /* Orientações de Como Configurar Integradas na Página */
 .guide-panel-inline {
   margin-top: auto;
